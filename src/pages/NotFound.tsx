@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import heroBunaken from "@/assets/hero-bunaken.jpg";
 
 const NotFound = () => {
   const location = useLocation();
@@ -9,11 +10,20 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${heroBunaken})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-hero" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center">
+        <h1 className="mb-4 text-4xl font-bold text-primary-foreground">404</h1>
+        <p className="mb-4 text-xl text-primary-foreground/90">Oops! Page not found</p>
+        <a href="/" className="text-seafoam underline hover:text-seafoam/90">
           Return to Home
         </a>
       </div>

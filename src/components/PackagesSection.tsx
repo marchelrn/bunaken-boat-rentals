@@ -19,8 +19,8 @@ interface Package {
 const packages: Package[] = [
   {
     id: 1,
-    name: "Paket Hemat",
-    price: "Rp 350.000",
+    name: "Kapal Kecil",
+    price: "Rp 170.000",
     duration: "4-5 Jam",
     capacity: "Max 6 Orang",
     image: heroBunaken,
@@ -33,10 +33,10 @@ const packages: Package[] = [
   },
   {
     id: 2,
-    name: "Paket Diving",
-    price: "Rp 750.000",
+    name: "Kapal Besar",
+    price: "Rp 120.000",
     duration: "Full Day",
-    capacity: "Max 8 Orang",
+    capacity: "Max 15 Orang",
     image: divingBunaken,
     features: [
       "Penjemputan dari hotel",
@@ -50,10 +50,10 @@ const packages: Package[] = [
   },
   {
     id: 3,
-    name: "Paket Sunset",
-    price: "Rp 500.000",
+    name: "Kapal Sedang",
+    price: "Rp 190.000",
     duration: "5-6 Jam",
-    capacity: "Max 10 Orang",
+    capacity: "Max 8 Orang",
     image: sunsetBunaken,
     features: [
       "Penjemputan dari hotel",
@@ -65,7 +65,7 @@ const packages: Package[] = [
   },
 ];
 
-const WHATSAPP_NUMBER = "6281234567890"; // Ganti dengan nomor WhatsApp yang benar
+const WHATSAPP_NUMBER = "6282196659515";
 
 const PackagesSection = () => {
   const handleBookNow = (packageName: string) => {

@@ -19,14 +19,14 @@ const Footer = () => {
             </p>
             <div className="flex gap-4">
               <a 
-                href="#" 
+                href="https://www.instagram.com/markhotampi/" 
                 className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a 
-                href="#" 
+                href="https://www.facebook.com/markho.tampi" 
                 className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
                 aria-label="Facebook"
               >
@@ -78,7 +78,7 @@ const Footer = () => {
                   href="tel:+6281234567890" 
                   className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                 >
-                  +62 812 3456 7890
+                  +62 821-9665-9515
                 </a>
               </li>
               <li className="flex items-center gap-3">

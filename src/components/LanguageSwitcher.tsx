@@ -10,10 +10,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Language } from '@/lib/translations';
 
 interface LanguageSwitcherProps {
-  isScrolled?: boolean;
+  className?: string;
 }
 
-const LanguageSwitcher = ({ isScrolled = false }: LanguageSwitcherProps) => {
+const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
   const { language, setLanguage } = useLanguage();
 
   const languages: { code: Language; label: string; flag: string }[] = [
@@ -27,11 +27,7 @@ const LanguageSwitcher = ({ isScrolled = false }: LanguageSwitcherProps) => {
         <Button
           variant="ghost"
           size="icon"
-          className={`relative ${
-            isScrolled 
-              ? "text-primary-foreground hover:text-foreground hover:bg-muted" 
-              : "text-primary-foreground hover:text-foreground hover:bg-primary-foreground/10"
-          }`}
+          className={className}
           aria-label="Change language"
         >
           <Languages className="h-5 w-5" />

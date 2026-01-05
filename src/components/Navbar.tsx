@@ -61,7 +61,11 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <LanguageSwitcher isScrolled={isScrolled} />
+            <LanguageSwitcher 
+              className={`font-body text-sm font-medium transition-colors hover:text-primary ${
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              }`}
+            />
             <Button variant="coral" size="default" asChild>
               <a href="#packages">{t.nav.bookNow}</a>
             </Button>
@@ -95,7 +99,7 @@ const Navbar = () => {
               ))}
               <div className="flex items-center justify-between py-2">
                 <span className="font-body text-foreground">Language:</span>
-                <LanguageSwitcher isScrolled={true} />
+                <LanguageSwitcher className="text-foreground hover:text-primary" />
               </div>
               <Button variant="coral" size="lg" className="w-full mt-2" asChild>
                 <a href="#packages" onClick={() => setIsMobileMenuOpen(false)}>

@@ -20,7 +20,6 @@ const Navbar = () => {
   const navLinks = [
     { label: t.nav.home, href: "#" },
     { label: t.nav.packages, href: "#packages" },
-    { label: t.nav.locations, href: "#locations" },
     { label: t.nav.about, href: "#about" },
     { label: t.nav.contact, href: "#contact" },
   ];

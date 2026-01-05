@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Anchor } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,10 +18,10 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { label: "Beranda", href: "#" },
-    { label: "Paket Wisata", href: "#packages" },
-    { label: "Tentang Kami", href: "#about" },
-    { label: "Kontak", href: "#contact" },
+    { label: t.nav.home, href: "#" },
+    { label: t.nav.packages, href: "#packages" },
+    { label: t.nav.about, href: "#about" },
+    { label: t.nav.contact, href: "#contact" },
   ];
 
   return (
@@ -46,7 +49,7 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-4">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -58,8 +61,9 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
+            <LanguageSwitcher isScrolled={isScrolled} />
             <Button variant="coral" size="default" asChild>
-              <a href="#packages">Pesan Sekarang</a>
+              <a href="#packages">{t.nav.bookNow}</a>
             </Button>
           </div>
 
@@ -89,9 +93,13 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
+              <div className="flex items-center justify-between py-2">
+                <span className="font-body text-foreground">Language:</span>
+                <LanguageSwitcher isScrolled={true} />
+              </div>
               <Button variant="coral" size="lg" className="w-full mt-2" asChild>
                 <a href="#packages" onClick={() => setIsMobileMenuOpen(false)}>
-                  Pesan Sekarang
+                  {t.nav.bookNow}
                 </a>
               </Button>
             </div>

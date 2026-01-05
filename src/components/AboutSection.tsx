@@ -1,29 +1,32 @@
 import { Shield, Award, Heart, Clock } from "lucide-react";
-
-const features = [
-  {
-    icon: Shield,
-    title: "Keamanan Terjamin",
-    description: "Kapal dilengkapi alat keselamatan standar internasional dan awak kapal berpengalaman.",
-  },
-  {
-    icon: Award,
-    title: "Berpengalaman",
-    description: "Lebih dari 8 tahun melayani wisatawan lokal dan mancanegara ke Bunaken.",
-  },
-  {
-    icon: Heart,
-    title: "Pelayanan Terbaik",
-    description: "Tim kami siap membantu menciptakan pengalaman wisata yang tak terlupakan.",
-  },
-  {
-    icon: Clock,
-    title: "Jadwal Fleksibel",
-    description: "Waktu keberangkatan dapat disesuaikan dengan keinginan Anda.",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const AboutSection = () => {
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      icon: Shield,
+      title: t.about.features.safety.title,
+      description: t.about.features.safety.description,
+    },
+    {
+      icon: Award,
+      title: t.about.features.experience.title,
+      description: t.about.features.experience.description,
+    },
+    {
+      icon: Heart,
+      title: t.about.features.service.title,
+      description: t.about.features.service.description,
+    },
+    {
+      icon: Clock,
+      title: t.about.features.schedule.title,
+      description: t.about.features.schedule.description,
+    },
+  ];
+
   return (
     <section id="about" className="py-20 lg:py-28 bg-muted">
       <div className="container mx-auto px-4">
@@ -31,31 +34,28 @@ const AboutSection = () => {
           {/* Text Content */}
           <div>
             <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
-              <span className="text-primary font-body text-sm font-medium">Tentang Kami</span>
+              <span className="text-primary font-body text-sm font-medium">{t.about.badge}</span>
             </div>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Pengalaman <span className="text-primary">Terpercaya</span> Sejak 2015
+              {t.about.title} <span className="text-primary">{t.about.titleHighlight}</span> {t.about.titleSuffix}
             </h2>
             <p className="font-body text-muted-foreground leading-relaxed mb-8">
-              Bunaken Boat Charter adalah penyedia layanan sewa kapal terpercaya di Manado. 
-              Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. 
-              Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke Pulau Bunaken 
-              akan menjadi momen yang tak terlupakan.
+              {t.about.description}
             </p>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
                 <div className="font-display text-3xl font-bold text-primary">500+</div>
-                <div className="text-sm text-muted-foreground">Trip Sukses</div>
+                <div className="text-sm text-muted-foreground">{t.about.stats.trips}</div>
               </div>
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
                 <div className="font-display text-3xl font-bold text-primary">2000+</div>
-                <div className="text-sm text-muted-foreground">Pelanggan Puas</div>
+                <div className="text-sm text-muted-foreground">{t.about.stats.customers}</div>
               </div>
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
                 <div className="font-display text-3xl font-bold text-primary">8+</div>
-                <div className="text-sm text-muted-foreground">Tahun Pengalaman</div>
+                <div className="text-sm text-muted-foreground">{t.about.stats.years}</div>
               </div>
             </div>
           </div>

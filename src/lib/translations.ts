@@ -1,0 +1,264 @@
+export type Language = 'id' | 'en';
+
+export const translations = {
+  id: {
+    // Navbar
+    nav: {
+      home: 'Beranda',
+      packages: 'Paket Wisata',
+      about: 'Tentang Kami',
+      contact: 'Kontak',
+      bookNow: 'Pesan Sekarang',
+    },
+    // Hero Section
+    hero: {
+      badge: 'Pengalaman Terbaik Sejak 2015',
+      title: 'Jelajahi Keindahan',
+      titleHighlight: 'Pulau Bunaken',
+      description: 'Nikmati perjalanan tak terlupakan ke surga bawah laut Indonesia. Sewa kapal dari Manado dengan layanan profesional dan harga terjangkau.',
+      viewPackages: 'Lihat Paket Wisata',
+      aboutUs: 'Tentang Kami',
+      scrollDown: 'Scroll ke bawah',
+    },
+    // Packages Section
+    packages: {
+      badge: 'Paket Wisata',
+      title: 'Pilih Paket',
+      titleHighlight: 'Terbaik',
+      titleSuffix: 'Anda',
+      description: 'Berbagai pilihan paket wisata yang dapat disesuaikan dengan kebutuhan dan budget Anda',
+      popular: 'Populer',
+      perPerson: '/orang',
+      bookNow: 'Pesan Sekarang',
+      duration: 'Durasi',
+      capacity: 'Kapasitas',
+      addOns: {
+        badge: 'Tambahan',
+        title: 'Layanan Tambahan',
+        description: 'Tingkatkan pengalaman wisata Anda dengan layanan tambahan yang tersedia',
+        inquire: 'Tanya Info',
+      },
+      whatsapp: {
+        package: 'Halo! Saya tertarik dengan {packageName} untuk wisata ke Pulau Bunaken. Boleh minta info lebih lanjut?',
+        addOn: 'Halo! Saya ingin menanyakan tentang add-on {addOnName} untuk paket wisata. Boleh minta info lebih lanjut?',
+      },
+    },
+    // Packages data
+    packageData: {
+      smallBoat: {
+        name: 'Kapal Kecil',
+        duration: '4-5 Jam',
+        capacity: 'Max 6 Orang',
+        features: ['Perjalanan Lebih cepat', 'Harga Lebih Murah'],
+        exclude: ['Makan Siang', 'Snorkling Equipment'],
+      },
+      largeBoat: {
+        name: 'Kapal Besar',
+        duration: 'Full Day',
+        capacity: 'Max 15 Orang',
+        features: ['Kapal lebih eksklusif'],
+        exclude: ['Makan Siang', 'Snorkling Equipment'],
+      },
+      mediumBoat: {
+        name: 'Kapal Sedang',
+        duration: '5-6 Jam',
+        capacity: 'Max 8 Orang',
+        features: ['Paket lebih effordable'],
+        exclude: ['Makan Siang', 'Snorkling Equipment'],
+      },
+    },
+    // Add-ons
+    addOns: {
+      snorkeling: {
+        name: 'Snorkling Equipment',
+        description: 'Set Snorkling Equipment (Fins & Mask)',
+      },
+      lunch: {
+        name: 'Makan Siang',
+        description: 'Makan Siang di Pulau Bunaken',
+      },
+    },
+    // About Section
+    about: {
+      badge: 'Tentang Kami',
+      title: 'Pengalaman',
+      titleHighlight: 'Terpercaya',
+      titleSuffix: 'Sejak 2015',
+      description: 'Bunaken Boat Charter adalah penyedia layanan sewa kapal terpercaya di Manado. Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke Pulau Bunaken akan menjadi momen yang tak terlupakan.',
+      stats: {
+        trips: 'Trip Sukses',
+        customers: 'Pelanggan Puas',
+        years: 'Tahun Pengalaman',
+      },
+      features: {
+        safety: {
+          title: 'Keamanan Terjamin',
+          description: 'Kapal dilengkapi alat keselamatan standar internasional dan awak kapal berpengalaman.',
+        },
+        experience: {
+          title: 'Berpengalaman',
+          description: 'Lebih dari 8 tahun melayani wisatawan lokal dan mancanegara ke Bunaken.',
+        },
+        service: {
+          title: 'Pelayanan Terbaik',
+          description: 'Tim kami siap membantu menciptakan pengalaman wisata yang tak terlupakan.',
+        },
+        schedule: {
+          title: 'Jadwal Fleksibel',
+          description: 'Waktu keberangkatan dapat disesuaikan dengan keinginan Anda.',
+        },
+      },
+    },
+    // Footer
+    footer: {
+      description: 'Penyedia layanan sewa kapal terpercaya untuk perjalanan wisata ke Pulau Bunaken. Nikmati keindahan bawah laut Indonesia bersama kami.',
+      menu: 'Menu',
+      contact: 'Hubungi Kami',
+      address: 'Jl. Boulevard, Manado\nSulawesi Utara, Indonesia',
+      copyright: '© 2025 Bunaken Charter. All rights reserved.',
+    },
+    // WhatsApp Button
+    whatsapp: {
+      button: 'Hubungi Kami',
+      message: 'Halo! Saya ingin bertanya tentang sewa kapal ke Pulau Bunaken.',
+      ariaLabel: 'Hubungi via WhatsApp',
+    },
+    // 404
+    notFound: {
+      title: '404',
+      message: 'Oops! Halaman tidak ditemukan',
+      backHome: 'Kembali ke Beranda',
+    },
+  },
+  en: {
+    // Navbar
+    nav: {
+      home: 'Home',
+      packages: 'Tour Packages',
+      about: 'About Us',
+      contact: 'Contact',
+      bookNow: 'Book Now',
+    },
+    // Hero Section
+    hero: {
+      badge: 'Best Experience Since 2015',
+      title: 'Explore the Beauty of',
+      titleHighlight: 'Bunaken Island',
+      description: 'Enjoy an unforgettable journey to Indonesia\'s underwater paradise. Rent a boat from Manado with professional service and affordable prices.',
+      viewPackages: 'View Tour Packages',
+      aboutUs: 'About Us',
+      scrollDown: 'Scroll down',
+    },
+    // Packages Section
+    packages: {
+      badge: 'Tour Packages',
+      title: 'Choose Your',
+      titleHighlight: 'Best',
+      titleSuffix: 'Package',
+      description: 'Various tour package options that can be tailored to your needs and budget',
+      popular: 'Popular',
+      perPerson: '/person',
+      bookNow: 'Book Now',
+      duration: 'Duration',
+      capacity: 'Capacity',
+      addOns: {
+        badge: 'Add-ons',
+        title: 'Additional Services',
+        description: 'Enhance your travel experience with available additional services',
+        inquire: 'Inquire',
+      },
+      whatsapp: {
+        package: 'Hello! I\'m interested in {packageName} for a trip to Bunaken Island. Can I get more information?',
+        addOn: 'Hello! I would like to inquire about the {addOnName} add-on for the tour package. Can I get more information?',
+      },
+    },
+    // Packages data
+    packageData: {
+      smallBoat: {
+        name: 'Small Boat',
+        duration: '4-5 Hours',
+        capacity: 'Max 6 People',
+        features: ['Faster Journey', 'More Affordable Price'],
+        exclude: ['Lunch', 'Snorkeling Equipment'],
+      },
+      largeBoat: {
+        name: 'Large Boat',
+        duration: 'Full Day',
+        capacity: 'Max 15 People',
+        features: ['More Exclusive Boat'],
+        exclude: ['Lunch', 'Snorkeling Equipment'],
+      },
+      mediumBoat: {
+        name: 'Medium Boat',
+        duration: '5-6 Hours',
+        capacity: 'Max 8 People',
+        features: ['More Affordable Package'],
+        exclude: ['Lunch', 'Snorkeling Equipment'],
+      },
+    },
+    // Add-ons
+    addOns: {
+      snorkeling: {
+        name: 'Snorkeling Equipment',
+        description: 'Snorkeling Equipment Set (Fins & Mask)',
+      },
+      lunch: {
+        name: 'Lunch',
+        description: 'Lunch at Bunaken Island',
+      },
+    },
+    // About Section
+    about: {
+      badge: 'About Us',
+      title: 'Trusted',
+      titleHighlight: 'Experience',
+      titleSuffix: 'Since 2015',
+      description: 'Bunaken Boat Charter is a trusted boat rental service provider in Manado. We are committed to providing the best marine tourism experience at affordable prices. With a well-maintained fleet and experienced crew, your journey to Bunaken Island will be an unforgettable moment.',
+      stats: {
+        trips: 'Successful Trips',
+        customers: 'Satisfied Customers',
+        years: 'Years of Experience',
+      },
+      features: {
+        safety: {
+          title: 'Guaranteed Safety',
+          description: 'Boats are equipped with international standard safety equipment and experienced crew.',
+        },
+        experience: {
+          title: 'Experienced',
+          description: 'More than 8 years serving local and international tourists to Bunaken.',
+        },
+        service: {
+          title: 'Best Service',
+          description: 'Our team is ready to help create an unforgettable travel experience.',
+        },
+        schedule: {
+          title: 'Flexible Schedule',
+          description: 'Departure time can be adjusted to your preference.',
+        },
+      },
+    },
+    // Footer
+    footer: {
+      description: 'Trusted boat rental service provider for trips to Bunaken Island. Enjoy Indonesia\'s underwater beauty with us.',
+      menu: 'Menu',
+      contact: 'Contact Us',
+      address: 'Jl. Boulevard, Manado\nNorth Sulawesi, Indonesia',
+      copyright: '© 2025 Bunaken Charter. All rights reserved.',
+    },
+    // WhatsApp Button
+    whatsapp: {
+      button: 'Contact Us',
+      message: 'Hello! I would like to ask about boat rental to Bunaken Island.',
+      ariaLabel: 'Contact via WhatsApp',
+    },
+    // 404
+    notFound: {
+      title: '404',
+      message: 'Oops! Page not found',
+      backHome: 'Return to Home',
+    },
+  },
+};
+
+export type TranslationKey = keyof typeof translations.id;

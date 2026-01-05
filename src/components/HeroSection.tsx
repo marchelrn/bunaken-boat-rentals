@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Anchor, ChevronDown } from "lucide-react";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const HeroSection = () => {
+  const { t } = useLanguage();
+  
   const scrollToPackages = () => {
     document.getElementById("packages")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -25,22 +28,20 @@ const HeroSection = () => {
       <div className="relative z-10 container mx-auto px-4 text-center">
         <div className="opacity-0 animate-fade-in-up">
           <div className="inline-flex items-center gap-2 bg-card/20 backdrop-blur-md rounded-full px-5 py-2 mb-6">
-            <Anchor className="w-5 h-5 text-seafoam" />
             <span className="text-primary-foreground font-body text-sm tracking-wide">
-              Pengalaman Terbaik Sejak 2015
+              {t.hero.badge}
             </span>
           </div>
         </div>
 
         <h1 className="opacity-0 animate-fade-in-up animation-delay-200 font-display text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-          Jelajahi Keindahan
+          {t.hero.title}
           <br />
-          <span className="text-seafoam">Pulau Bunaken</span>
+          <span className="text-seafoam">{t.hero.titleHighlight}</span>
         </h1>
 
         <p className="opacity-0 animate-fade-in-up animation-delay-400 font-body text-lg md:text-xl text-primary-foreground/90 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Nikmati perjalanan tak terlupakan ke surga bawah laut Indonesia. 
-          Sewa kapal dari Manado dengan layanan profesional dan harga terjangkau.
+          {t.hero.description}
         </p>
 
         <div className="opacity-0 animate-fade-in-up animation-delay-600 flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -49,7 +50,7 @@ const HeroSection = () => {
             size="xl"
             onClick={scrollToPackages}
           >
-            Lihat Paket Wisata
+            {t.hero.viewPackages}
           </Button>
           <Button 
             variant="outline" 
@@ -57,7 +58,7 @@ const HeroSection = () => {
             className="border-primary-foreground/50 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
             asChild
           >
-            <a href="#about">Tentang Kami</a>
+            <a href="#about">{t.hero.aboutUs}</a>
           </Button>
         </div>
       </div>
@@ -66,7 +67,7 @@ const HeroSection = () => {
       <button 
         onClick={scrollToPackages}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 text-primary-foreground/80 hover:text-primary-foreground transition-colors animate-bounce"
-        aria-label="Scroll ke bawah"
+        aria-label={t.hero.scrollDown}
       >
         <ChevronDown className="w-8 h-8" />
       </button>

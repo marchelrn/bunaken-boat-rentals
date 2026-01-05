@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Clock, Users, Utensils, Camera, Anchor, Waves, CheckCircle2 } from "lucide-react";
+import { Clock, Users, Camera, Anchor, Waves, CheckCircle2, CircleMinus } from "lucide-react";
 import divingBunaken from "@/assets/diving-bunaken.jpg";
 import sunsetBunaken from "@/assets/sunset-bunaken.jpg";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Package {
   id: number;
@@ -13,66 +14,82 @@ interface Package {
   capacity: string;
   image: string;
   features: string[];
+  exclude: string[];
   popular?: boolean;
 }
 
-const packages: Package[] = [
-  {
-    id: 1,
-    name: "Kapal Kecil",
-    price: "Rp 170.000",
-    duration: "4-5 Jam",
-    capacity: "Max 6 Orang",
-    image: heroBunaken,
-    features: [
-      "Penjemputan dari hotel",
-      "Kapal tradisional nyaman",
-      "Snorkeling equipment",
-      "Air mineral",
-    ],
-  },
-  {
-    id: 2,
-    name: "Kapal Besar",
-    price: "Rp 120.000",
-    duration: "Full Day",
-    capacity: "Max 15 Orang",
-    image: divingBunaken,
-    features: [
-      "Penjemputan dari hotel",
-      "Speedboat modern",
-      "Full diving equipment",
-      "Instruktur profesional",
-      "Makan siang",
-      "Dokumentasi foto",
-    ],
-    popular: true,
-  },
-  {
-    id: 3,
-    name: "Kapal Sedang",
-    price: "Rp 190.000",
-    duration: "5-6 Jam",
-    capacity: "Max 8 Orang",
-    image: sunsetBunaken,
-    features: [
-      "Penjemputan dari hotel",
-      "Kapal eksklusif",
-      "Snorkeling equipment",
-      "BBQ seafood dinner",
-      "View sunset terbaik",
-    ],
-  },
-];
+interface AddOn {
+  id: number;
+  name: string;
+  price: string;
+  description: string;
+  icon: React.ReactNode;
+}
 
 const WHATSAPP_NUMBER = "6282196659515";
 
 const PackagesSection = () => {
+  const { t, language } = useLanguage();
+
+  const packages: Package[] = [
+    {
+      id: 1,
+      name: t.packageData.smallBoat.name,
+      price: "Rp 170.000",
+      duration: t.packageData.smallBoat.duration,
+      capacity: t.packageData.smallBoat.capacity,
+      image: heroBunaken,
+      features: t.packageData.smallBoat.features,
+      exclude: t.packageData.smallBoat.exclude,
+    },
+    {
+      id: 2,
+      name: t.packageData.largeBoat.name,
+      price: "Rp 120.000",
+      duration: t.packageData.largeBoat.duration,
+      capacity: t.packageData.largeBoat.capacity,
+      image: divingBunaken,
+      features: t.packageData.largeBoat.features,
+      exclude: t.packageData.largeBoat.exclude,
+      popular: true,
+    },
+    {
+      id: 3,
+      name: t.packageData.mediumBoat.name,
+      price: "Rp 190.000",
+      duration: t.packageData.mediumBoat.duration,
+      capacity: t.packageData.mediumBoat.capacity,
+      image: sunsetBunaken,
+      features: t.packageData.mediumBoat.features,
+      exclude: t.packageData.mediumBoat.exclude,
+    },
+  ];
+
+  const addOns: AddOn[] = [
+    {
+      id: 1,
+      name: t.addOns.snorkeling.name,
+      price: "Rp 150.000",
+      description: t.addOns.snorkeling.description,
+      icon: <Waves className="w-5 h-5" />,
+    },
+    {
+      id: 2,
+      name: t.addOns.lunch.name,
+      price: "Rp 50.000",
+      description: t.addOns.lunch.description,
+      icon: <Camera className="w-5 h-5" />,
+    },
+  ];
+
   const handleBookNow = (packageName: string) => {
-    const message = encodeURIComponent(
-      `Halo! Saya tertarik dengan ${packageName} untuk wisata ke Pulau Bunaken. Boleh minta info lebih lanjut?`
-    );
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
+    const message = t.packages.whatsapp.package.replace('{packageName}', packageName);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+  };
+
+  const handleAddOnInquiry = (addOnName: string) => {
+    const message = t.packages.whatsapp.addOn.replace('{addOnName}', addOnName);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
   };
 
   return (
@@ -81,19 +98,18 @@ const PackagesSection = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
-            <Waves className="w-4 h-4 text-primary" />
-            <span className="text-primary font-body text-sm font-medium">Paket Wisata</span>
+            <span className="text-primary font-body text-sm font-medium">{t.packages.badge}</span>
           </div>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Pilih Paket <span className="text-primary">Terbaik</span> Anda
+            {t.packages.title} <span className="text-primary">{t.packages.titleHighlight}</span> {t.packages.titleSuffix}
           </h2>
           <p className="font-body text-muted-foreground max-w-xl mx-auto">
-            Berbagai pilihan paket wisata yang dapat disesuaikan dengan kebutuhan dan budget Anda
+            {t.packages.description}
           </p>
         </div>
 
         {/* Packages Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {packages.map((pkg, index) => (
             <Card 
               key={pkg.id}
@@ -104,7 +120,7 @@ const PackagesSection = () => {
             >
               {pkg.popular && (
                 <div className="absolute top-4 right-4 z-10 bg-gradient-sunset text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
-                  Populer
+                  {t.packages.popular}
                 </div>
               )}
               
@@ -122,7 +138,7 @@ const PackagesSection = () => {
                 <h3 className="font-display text-2xl font-bold text-card-foreground">{pkg.name}</h3>
                 <div className="flex items-baseline gap-1">
                   <span className="font-display text-3xl font-bold text-primary">{pkg.price}</span>
-                  <span className="text-muted-foreground text-sm">/orang</span>
+                  <span className="text-muted-foreground text-sm">{t.packages.perPerson}</span>
                 </div>
               </CardHeader>
 
@@ -148,6 +164,16 @@ const PackagesSection = () => {
                     </li>
                   ))}
                 </ul>
+                
+                {/* Excluded Items */}
+                <ul className="space-y-2">
+                  {pkg.exclude.map((excluded, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm">
+                      <CircleMinus className="w-4 h-4 text-not-available flex-shrink-0" />
+                      <span className="text-not-available/90">{excluded}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
 
               <CardFooter>
@@ -158,11 +184,69 @@ const PackagesSection = () => {
                   onClick={() => handleBookNow(pkg.name)}
                 >
                   <Anchor className="w-4 h-4" />
-                  Pesan Sekarang
+                  {t.packages.bookNow}
                 </Button>
               </CardFooter>
             </Card>
           ))}
+        </div>
+
+        {/* Add-ons Section */}
+        <div className="mt-20">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-seafoam/20 rounded-full px-4 py-2 mb-4">
+              <span className="text-primary font-body text-sm font-medium">{t.packages.addOns.badge}</span>
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+              {t.packages.addOns.title}
+            </h2>
+            <p className="font-body text-muted-foreground max-w-xl mx-auto">
+              {t.packages.addOns.description}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {addOns.map((addOn, index) => (
+              <Card
+                key={addOn.id}
+                className="group border-border/50 shadow-card hover:shadow-glow transition-all duration-300 hover:border-primary/50"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-primary/10 rounded-lg text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      {addOn.icon}
+                    </div>
+                    <h3 className="font-display text-xl font-bold text-card-foreground">
+                      {addOn.name}
+                    </h3>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-display text-2xl font-bold text-primary">
+                      {addOn.price}
+                    </span>
+                  </div>
+                </CardHeader>
+
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {addOn.description}
+                  </p>
+                </CardContent>
+
+                <CardFooter>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => handleAddOnInquiry(addOn.name)}
+                  >
+                    {t.packages.addOns.inquire}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </section>

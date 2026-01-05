@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Anchor, ChevronDown } from "lucide-react";
+import {ChevronDown } from "lucide-react";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -26,13 +26,7 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
-        <div className="opacity-0 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 bg-card/20 backdrop-blur-md rounded-full px-5 py-2 mb-6">
-            <span className="text-primary-foreground font-body text-sm tracking-wide">
-              {t.hero.badge}
-            </span>
-          </div>
-        </div>
+        
 
         <h1 className="opacity-0 animate-fade-in-up animation-delay-200 font-display text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
           {t.hero.title}

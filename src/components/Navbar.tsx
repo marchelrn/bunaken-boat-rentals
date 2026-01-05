@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Anchor } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
@@ -20,6 +20,7 @@ const Navbar = () => {
   const navLinks = [
     { label: t.nav.home, href: "#" },
     { label: t.nav.packages, href: "#packages" },
+    { label: t.nav.locations, href: "#locations" },
     { label: t.nav.about, href: "#about" },
     { label: t.nav.contact, href: "#contact" },
   ];
@@ -34,16 +35,13 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-              isScrolled ? "bg-primary" : "bg-primary-foreground/20"
-            }`}>
-              <Anchor className={`w-5 h-5 ${isScrolled ? "text-primary-foreground" : "text-primary-foreground"}`} />
-            </div>
-            <span className={`font-display text-xl font-bold transition-colors ${
-              isScrolled ? "text-foreground" : "text-primary-foreground"
-            }`}>
+          {/* Brand Name */}
+          <a href="#" className="group">
+            <span
+              className={`font-display text-xl font-bold transition-colors ${
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              }`}
+            >
               Bunaken Charter
             </span>
           </a>
@@ -61,7 +59,7 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <LanguageSwitcher 
+            <LanguageSwitcher
               className={`font-body text-sm font-medium transition-colors hover:text-primary ${
                 isScrolled ? "text-foreground" : "text-primary-foreground"
               }`}
@@ -75,11 +73,17 @@ const Navbar = () => {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
-              isScrolled ? "text-foreground hover:bg-muted" : "text-primary-foreground hover:bg-primary-foreground/10"
+              isScrolled
+                ? "text-foreground hover:bg-muted"
+                : "text-primary-foreground hover:bg-primary-foreground/10"
             }`}
             aria-label="Toggle menu"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 

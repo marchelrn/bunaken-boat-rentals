@@ -28,16 +28,18 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-20 lg:py-28 bg-muted">
-      <div className="container mx-auto px-4">
+    <section id="about" className="relative py-20 lg:py-28 bg-muted/80">
+      {/* Top gradient transition from Locations */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/8 via-muted/50 to-transparent" />
+
+      <div className="relative container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Text Content */}
           <div>
-            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
-              <span className="text-primary font-body text-sm font-medium">{t.about.badge}</span>
-            </div>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
-              {t.about.title} <span className="text-primary">{t.about.titleHighlight}</span> {t.about.titleSuffix}
+              {t.about.title}{" "}
+              <span className="text-primary">{t.about.titleHighlight}</span>{" "}
+              {t.about.titleSuffix}
             </h2>
             <p className="font-body text-muted-foreground leading-relaxed mb-8">
               {t.about.description}
@@ -46,16 +48,28 @@ const AboutSection = () => {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
-                <div className="font-display text-3xl font-bold text-primary">500+</div>
-                <div className="text-sm text-muted-foreground">{t.about.stats.trips}</div>
+                <div className="font-display text-3xl font-bold text-primary">
+                  500+
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t.about.stats.trips}
+                </div>
               </div>
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
-                <div className="font-display text-3xl font-bold text-primary">2000+</div>
-                <div className="text-sm text-muted-foreground">{t.about.stats.customers}</div>
+                <div className="font-display text-3xl font-bold text-primary">
+                  2000+
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t.about.stats.customers}
+                </div>
               </div>
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
-                <div className="font-display text-3xl font-bold text-primary">8+</div>
-                <div className="text-sm text-muted-foreground">{t.about.stats.years}</div>
+                <div className="font-display text-3xl font-bold text-primary">
+                  8+
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t.about.stats.years}
+                </div>
               </div>
             </div>
           </div>
@@ -63,7 +77,7 @@ const AboutSection = () => {
           {/* Features Grid */}
           <div className="grid sm:grid-cols-2 gap-6">
             {features.map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="group p-6 bg-card rounded-2xl shadow-soft hover:shadow-card transition-all duration-300 hover:-translate-y-1"
               >

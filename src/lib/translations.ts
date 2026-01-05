@@ -6,13 +6,13 @@ export const translations = {
     nav: {
       home: 'Beranda',
       packages: 'Paket Wisata',
+      locations: 'Lokasi',
       about: 'Tentang Kami',
       contact: 'Kontak',
       bookNow: 'Pesan Sekarang',
     },
     // Hero Section
     hero: {
-      badge: 'Pengalaman Terbaik Sejak 2015',
       title: 'Jelajahi Keindahan',
       titleHighlight: 'Pulau Bunaken',
       description: 'Nikmati perjalanan tak terlupakan ke surga bawah laut Indonesia. Sewa kapal dari Manado dengan layanan profesional dan harga terjangkau.',
@@ -109,6 +109,11 @@ export const translations = {
         },
       },
     },
+    // Locations Section
+    locations: {
+      title: 'Lokasi',
+      viewOnMaps: 'Lihat di Google Maps',
+    },
     // Footer
     footer: {
       description: 'Penyedia layanan sewa kapal terpercaya untuk perjalanan wisata ke Pulau Bunaken. Nikmati keindahan bawah laut Indonesia bersama kami.',
@@ -135,13 +140,13 @@ export const translations = {
     nav: {
       home: 'Home',
       packages: 'Tour Packages',
+      locations: 'Locations',
       about: 'About Us',
       contact: 'Contact',
       bookNow: 'Book Now',
     },
     // Hero Section
     hero: {
-      badge: 'Best Experience Since 2015',
       title: 'Explore the Beauty of',
       titleHighlight: 'Bunaken Island',
       description: 'Enjoy an unforgettable journey to Indonesia\'s underwater paradise. Rent a boat from Manado with professional service and affordable prices.',
@@ -237,6 +242,11 @@ export const translations = {
           description: 'Departure time can be adjusted to your preference.',
         },
       },
+    },
+    // Locations Section
+    locations: {
+      title: 'Locations',
+      viewOnMaps: 'View on Google Maps',
     },
     // Footer
     footer: {

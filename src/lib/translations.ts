@@ -60,7 +60,7 @@ export const translations = {
         name: "Kapal Speed",
         duration: "Full day",
         capacity: "1-5 Orang",
-        features: ["Perjalanan Lebih cepat", "Harga Lebih Murah"],
+        features: ["Perjalanan Lebih cepat", "Cocok untuk group Kecil"],
         exclude: ["Makan Siang", "Snorkling Equipment"],
         routes: [
           { name: "Bunaken", price: "1.200.000" },
@@ -225,7 +225,7 @@ export const translations = {
         name: "Speed Boat",
         duration: "Full day",
         capacity: "1-5 People",
-        features: ["Faster Journey", "More Affordable Price"],
+        features: ["Faster Journey", "Suitable for small groups"],
         exclude: ["Lunch", "Snorkeling Equipment"],
         routes: [
           { name: "Bunaken", price: "1.200.000" },

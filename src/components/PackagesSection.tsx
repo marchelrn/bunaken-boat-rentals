@@ -9,18 +9,18 @@ import {
 import {
   Clock,
   Users,
-  Camera,
-  Anchor,
-  Waves,
   CheckCircle2,
   CircleMinus,
   ChevronDown,
   MapPin,
+  Utensils,
+  Waves,
 } from "lucide-react";
 import divingBunaken from "@/assets/diving-bunaken.jpg";
 import sunsetBunaken from "@/assets/sunset-bunaken.jpg";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePackages } from "@/contexts/PackageContext";
 
 interface Route {
   name: string;
@@ -87,60 +87,54 @@ const formatPrice = (price: number): string => {
 
 const PackagesSection = () => {
   const { t, language } = useLanguage();
+  const { packages: packagesData } = usePackages();
   const [expandedPackage, setExpandedPackage] = useState<number | null>(null);
 
-  const packages: Package[] = [
-    {
-      id: 1,
-      name: t.packageData.speed.name,
-      duration: t.packageData.speed.duration,
-      capacity: t.packageData.speed.capacity,
-      image: heroBunaken,
-      features: t.packageData.speed.features,
-      exclude: t.packageData.speed.exclude,
-      routes: t.packageData.speed.routes,
-      popular: false,
-    },
-    {
-      id: 2,
-      name: t.packageData.katamaran.name,
-      duration: t.packageData.katamaran.duration,
-      capacity: t.packageData.katamaran.capacity,
-      image: divingBunaken,
-      features: t.packageData.katamaran.features,
-      exclude: t.packageData.katamaran.exclude,
-      routes: t.packageData.katamaran.routes,
-      popular: false,
-    },
-    {
-      id: 3,
-      name: t.packageData.longboat.name,
-      duration: t.packageData.longboat.duration,
-      capacity: t.packageData.longboat.capacity,
-      image: sunsetBunaken,
-      features: t.packageData.longboat.features,
-      exclude: t.packageData.longboat.exclude,
-      routes: t.packageData.longboat.routes,
-      popular: true,
-    },
-  ];
+  // Map package images based on ID
+  const packageImages: Record<number, string> = {
+    1: heroBunaken,
+    2: divingBunaken,
+    3: sunsetBunaken,
+  };
 
-  const addOns: AddOn[] = [
-    {
-      id: 1,
-      name: t.addOns.snorkeling.name,
-      price: "Rp 150.000",
-      description: t.addOns.snorkeling.description,
-      icon: <Waves className="w-5 h-5" />,
-    },
-    {
-      id: 2,
-      name: t.addOns.lunch.name,
-      price: "Rp 50.000",
-      description: t.addOns.lunch.description,
-      icon: <Camera className="w-5 h-5" />,
-    },
-  ];
+  // Convert PackageData to Package format with images
+  const packages: Package[] = packagesData.map((pkg) => ({
+    id: pkg.id,
+    name: pkg.name,
+    duration: pkg.duration,
+    capacity: pkg.capacity,
+    image: packageImages[pkg.id] || heroBunaken,
+    features: pkg.features,
+    exclude: pkg.exclude,
+    routes: pkg.routes,
+    popular: pkg.popular || false,
+  }));
+
+  const { addOns: addOnsData } = usePackages();
+
+  // Map add-ons with icons based on name
+  const getAddOnIcon = (name: string) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes("snorkel") || lowerName.includes("snorkling")) {
+      return <Waves className="w-5 h-5" />;
+    }
+    if (
+      lowerName.includes("makan") ||
+      lowerName.includes("lunch") ||
+      lowerName.includes("makan siang")
+    ) {
+      return <Utensils className="w-5 h-5" />;
+    }
+    return <Waves className="w-5 h-5" />; // Default icon
+  };
+
+  const addOns: AddOn[] = addOnsData.map((addOn) => ({
+    id: addOn.id,
+    name: addOn.name,
+    price: addOn.price,
+    description: addOn.description,
+    icon: getAddOnIcon(addOn.name),
+  }));
 
   const handleBookNow = (
     packageName: string,
@@ -233,23 +227,15 @@ const PackagesSection = () => {
                 </h3>
                 {(() => {
                   const minPrice = getMinPrice(pkg.routes);
-                  const maxCapacity = getMaxCapacity(pkg.capacity);
-                  const pricePerPerson =
-                    minPrice > 0 && maxCapacity > 0
-                      ? Math.floor(minPrice / maxCapacity)
-                      : 0;
 
-                  if (pricePerPerson > 0) {
+                  if (minPrice > 0) {
                     return (
                       <div className="flex items-baseline gap-1">
                         <span className="text-sm text-muted-foreground">
                           {t.packages.startingFrom}
                         </span>
                         <span className="font-display text-2xl font-bold text-primary">
-                          Rp {formatPrice(pricePerPerson)}
-                        </span>
-                        <span className="text-muted-foreground text-sm">
-                          {t.packages.perPerson}
+                          Rp {formatPrice(minPrice)}
                         </span>
                       </div>
                     );
@@ -344,7 +330,6 @@ const PackagesSection = () => {
                               }
                               className="sm:ml-4 w-full sm:w-auto"
                             >
-                              <Anchor className="w-4 h-4 mr-2" />
                               {t.packages.bookNow}
                             </Button>
                           </div>

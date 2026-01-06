@@ -1,4 +1,4 @@
-﻿const BASE_URL = "https://bunakencharter.up.railway.app/";
+﻿const BASE_URL = "https://bunakencharter.up.railway.app";
 
 export const api = {
   get: async (endpoint: string) => {

@@ -34,6 +34,7 @@ interface PackageContextType {
   packages: PackageData[];
   addOns: AddOnData[];
   updatePackage: (id: number, data: Partial<PackageData>) => Promise<void>;
+  addPackage: (data: Omit<PackageData, "id" | "ID">) => Promise<void>;
   updateAddOn: (id: number, data: Partial<AddOnData>) => void;
   addAddOn: (data: Omit<AddOnData, "id">) => void;
   removeAddOn: (id: number) => void;
@@ -120,6 +121,28 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const addPackage = async (data: Omit<PackageData, "id" | "ID">) => {
+    try {
+        const payload: any = { ...data };
+        
+        if (data.exclude) payload.excludes = data.exclude;
+        if (data.popular !== undefined) payload.is_popular = data.popular;
+        
+        // Ensure required fields have defaults
+        if (!payload.features) payload.features = [];
+        if (!payload.routes) payload.routes = [];
+        if (!payload.excludes) payload.excludes = [];
+
+        await api.post("/admin/packages", payload);
+        toast.success("Paket berhasil ditambahkan");
+        await fetchPackages();
+    } catch (error) {
+        console.error("Add package failed", error);
+        toast.error("Gagal menambahkan paket");
+        throw error;
+    }
+  };
+
   const updateAddOn = (id: number, data: Partial<AddOnData>) => {
     setAddOns((prev) =>
       prev.map((addOn) => (addOn.id === id ? { ...addOn, ...data } : addOn))
@@ -158,6 +181,7 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
         packages,
         addOns,
         updatePackage,
+        addPackage,
         updateAddOn,
         addAddOn,
         removeAddOn,

@@ -29,6 +29,7 @@ const AdminDashboard = () => {
     packages,
     addOns,
     updatePackage,
+    addPackage,
     updateAddOn,
     addAddOn,
     removeAddOn,
@@ -46,6 +47,7 @@ const AdminDashboard = () => {
   );
   const [editingAddOn, setEditingAddOn] = useState<AddOnData | null>(null);
   const [showAddAddOn, setShowAddAddOn] = useState(false);
+  const [showAddPackage, setShowAddPackage] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -57,21 +59,57 @@ const AdminDashboard = () => {
     setEditingRouteIndex(null);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editingPackage) {
-      updatePackage(editingPackage.id, editingPackage);
-      savePackages();
-      setEditingPackage(null);
-      toast({
-        title: "Berhasil",
-        description: "Package berhasil diperbarui",
-      });
+      try {
+        // Check if this is a new package (no id) or existing package
+        if (!editingPackage.id && !editingPackage.ID) {
+          // New package
+          const { id, ID, ...packageData } = editingPackage;
+          await addPackage(packageData);
+          setEditingPackage(null);
+          setShowAddPackage(false);
+          toast({
+            title: "Berhasil",
+            description: "Package berhasil ditambahkan",
+          });
+        } else {
+          // Update existing package
+          const packageId = editingPackage.id || editingPackage.ID || 0;
+          await updatePackage(packageId, editingPackage);
+          setEditingPackage(null);
+          toast({
+            title: "Berhasil",
+            description: "Package berhasil diperbarui",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Gagal menyimpan package",
+          variant: "destructive",
+        });
+      }
     }
   };
 
   const handleCancel = () => {
     setEditingPackage(null);
     setEditingRouteIndex(null);
+    setShowAddPackage(false);
+  };
+
+  const handleNewPackage = () => {
+    setEditingPackage({
+      name: "",
+      duration: "",
+      capacity: "",
+      features: [],
+      exclude: [],
+      routes: [],
+      popular: false,
+    });
+    setShowAddPackage(true);
   };
 
   const handleReset = () => {
@@ -272,6 +310,305 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        {/* Packages Section */}
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Paket Wisata</h2>
+            <p className="text-muted-foreground">
+              Kelola paket wisata yang tersedia
+            </p>
+          </div>
+          {!showAddPackage &&
+            (!editingPackage ||
+              (editingPackage.id === undefined &&
+                editingPackage.ID === undefined)) && (
+              <Button onClick={handleNewPackage}>
+                <Plus className="w-4 h-4 mr-2" />
+                Tambah Package
+              </Button>
+            )}
+        </div>
+
+        {/* Add New Package Form */}
+        {showAddPackage &&
+          editingPackage &&
+          !editingPackage.id &&
+          !editingPackage.ID && (
+            <Card className="mb-6 border-2 border-primary">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl">
+                    Tambah Package Baru
+                  </CardTitle>
+                  <div className="flex gap-2">
+                    <Button onClick={handleSave}>
+                      <Save className="w-4 h-4 mr-2" />
+                      Simpan Package
+                    </Button>
+                    <Button variant="outline" onClick={handleCancel}>
+                      Batal
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Basic Info */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Nama Package</Label>
+                      <Input
+                        value={editingPackage.name}
+                        onChange={(e) =>
+                          setEditingPackage({
+                            ...editingPackage,
+                            name: e.target.value,
+                          })
+                        }
+                        placeholder="Contoh: Kapal Speed"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Kapasitas</Label>
+                      <Input
+                        value={editingPackage.capacity}
+                        onChange={(e) =>
+                          setEditingPackage({
+                            ...editingPackage,
+                            capacity: e.target.value,
+                          })
+                        }
+                        placeholder="Contoh: 1-5 Orang"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Durasi</Label>
+                      <Input
+                        value={editingPackage.duration}
+                        onChange={(e) =>
+                          setEditingPackage({
+                            ...editingPackage,
+                            duration: e.target.value,
+                          })
+                        }
+                        placeholder="Contoh: Full day"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>
+                        <input
+                          type="checkbox"
+                          checked={editingPackage.popular || false}
+                          onChange={(e) =>
+                            setEditingPackage({
+                              ...editingPackage,
+                              popular: e.target.checked,
+                            })
+                          }
+                          className="mr-2"
+                        />
+                        Popular Package
+                      </Label>
+                    </div>
+                  </div>
+
+                  {/* Routes */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-lg font-semibold">
+                        Rute & Harga
+                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setEditingPackage({
+                            ...editingPackage,
+                            routes: [
+                              ...editingPackage.routes,
+                              { name: "", price: "" },
+                            ],
+                          });
+                        }}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Tambah Rute
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      {editingPackage.routes.map((route, idx) => (
+                        <div key={idx} className="flex gap-2 items-center">
+                          <Input
+                            placeholder="Nama rute (e.g., Bunaken)"
+                            value={route.name}
+                            onChange={(e) => {
+                              const updatedRoutes = [...editingPackage.routes];
+                              updatedRoutes[idx] = {
+                                ...route,
+                                name: e.target.value,
+                              };
+                              setEditingPackage({
+                                ...editingPackage,
+                                routes: updatedRoutes,
+                              });
+                            }}
+                            className="flex-1"
+                          />
+                          <Input
+                            placeholder="Harga (e.g., 1.200.000)"
+                            value={route.price}
+                            onChange={(e) => {
+                              const updatedRoutes = [...editingPackage.routes];
+                              updatedRoutes[idx] = {
+                                ...route,
+                                price: e.target.value,
+                              };
+                              setEditingPackage({
+                                ...editingPackage,
+                                routes: updatedRoutes,
+                              });
+                            }}
+                            className="w-40"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingPackage({
+                                ...editingPackage,
+                                routes: editingPackage.routes.filter(
+                                  (_, i) => i !== idx
+                                ),
+                              });
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-lg font-semibold">Fitur</Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setEditingPackage({
+                            ...editingPackage,
+                            features: [...editingPackage.features, ""],
+                          });
+                        }}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Tambah Fitur
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      {editingPackage.features.map((feature, idx) => (
+                        <div key={idx} className="flex gap-2">
+                          <Input
+                            value={feature}
+                            onChange={(e) => {
+                              const updatedFeatures = [
+                                ...editingPackage.features,
+                              ];
+                              updatedFeatures[idx] = e.target.value;
+                              setEditingPackage({
+                                ...editingPackage,
+                                features: updatedFeatures,
+                              });
+                            }}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingPackage({
+                                ...editingPackage,
+                                features: editingPackage.features.filter(
+                                  (_, i) => i !== idx
+                                ),
+                              });
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Exclude */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-lg font-semibold">
+                        Tidak Termasuk
+                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setEditingPackage({
+                            ...editingPackage,
+                            exclude: [...editingPackage.exclude, ""],
+                          });
+                        }}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Tambah Item
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      {editingPackage.exclude.map((exclude, idx) => (
+                        <div key={idx} className="flex gap-2">
+                          <Input
+                            value={exclude}
+                            onChange={(e) => {
+                              const updatedExclude = [
+                                ...editingPackage.exclude,
+                              ];
+                              updatedExclude[idx] = e.target.value;
+                              setEditingPackage({
+                                ...editingPackage,
+                                exclude: updatedExclude,
+                              });
+                            }}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingPackage({
+                                ...editingPackage,
+                                exclude: editingPackage.exclude.filter(
+                                  (_, i) => i !== idx
+                                ),
+                              });
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
         {/* Packages List */}
         <div className="space-y-6">
           {packages.map((pkg) => (
@@ -289,7 +626,9 @@ const AdminDashboard = () => {
                       )}
                     </CardDescription>
                   </div>
-                  {!editingPackage || editingPackage.id !== pkg.id ? (
+                  {!editingPackage ||
+                  (editingPackage.id !== pkg.id &&
+                    editingPackage.ID !== pkg.ID) ? (
                     <Button onClick={() => handleEdit(pkg)}>
                       <Edit2 className="w-4 h-4 mr-2" />
                       Edit
@@ -308,7 +647,9 @@ const AdminDashboard = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                {editingPackage && editingPackage.id === pkg.id ? (
+                {editingPackage &&
+                (editingPackage.id === pkg.id ||
+                  editingPackage.ID === pkg.ID) ? (
                   <div className="space-y-6">
                     {/* Basic Info */}
                     <div className="grid md:grid-cols-2 gap-4">

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,21 +14,28 @@ import {
   Waves,
   CheckCircle2,
   CircleMinus,
+  ChevronDown,
+  MapPin,
 } from "lucide-react";
 import divingBunaken from "@/assets/diving-bunaken.jpg";
 import sunsetBunaken from "@/assets/sunset-bunaken.jpg";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+interface Route {
+  name: string;
+  price: string;
+}
+
 interface Package {
   id: number;
   name: string;
-  price: string;
   duration: string;
   capacity: string;
   image: string;
   features: string[];
   exclude: string[];
+  routes: Route[];
   popular?: boolean;
 }
 
@@ -41,40 +49,79 @@ interface AddOn {
 
 const WHATSAPP_NUMBER = "6282196659515";
 
+// Helper function to extract max capacity from string like "1-5 Orang" or "10-15 Orang"
+const getMaxCapacity = (capacityString: string): number => {
+  const match = capacityString.match(/(\d+)\s*-\s*(\d+)/);
+  if (match) {
+    return parseInt(match[2], 10); // Return the second number (max)
+  }
+  // Fallback: try to find any number
+  const numberMatch = capacityString.match(/(\d+)/);
+  return numberMatch ? parseInt(numberMatch[1], 10) : 1;
+};
+
+// Helper function to get minimum price from routes (excluding "-")
+const getMinPrice = (routes: Route[]): number => {
+  const prices = routes
+    .map((route) => {
+      // Remove dots and convert to number, skip if price is "-"
+      if (
+        route.price === "-" ||
+        route.price.toLowerCase().includes("hubungi")
+      ) {
+        return null;
+      }
+      const priceStr = route.price.replace(/\./g, "");
+      const priceNum = parseInt(priceStr, 10);
+      return isNaN(priceNum) ? null : priceNum;
+    })
+    .filter((price): price is number => price !== null);
+
+  return prices.length > 0 ? Math.min(...prices) : 0;
+};
+
+// Helper function to format price
+const formatPrice = (price: number): string => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 const PackagesSection = () => {
   const { t, language } = useLanguage();
+  const [expandedPackage, setExpandedPackage] = useState<number | null>(null);
 
   const packages: Package[] = [
     {
       id: 1,
-      name: t.packageData.smallBoat.name,
-      price: "Rp 170.000",
-      duration: t.packageData.smallBoat.duration,
-      capacity: t.packageData.smallBoat.capacity,
+      name: t.packageData.speed.name,
+      duration: t.packageData.speed.duration,
+      capacity: t.packageData.speed.capacity,
       image: heroBunaken,
-      features: t.packageData.smallBoat.features,
-      exclude: t.packageData.smallBoat.exclude,
+      features: t.packageData.speed.features,
+      exclude: t.packageData.speed.exclude,
+      routes: t.packageData.speed.routes,
+      popular: false,
     },
     {
       id: 2,
-      name: t.packageData.largeBoat.name,
-      price: "Rp 120.000",
-      duration: t.packageData.largeBoat.duration,
-      capacity: t.packageData.largeBoat.capacity,
+      name: t.packageData.katamaran.name,
+      duration: t.packageData.katamaran.duration,
+      capacity: t.packageData.katamaran.capacity,
       image: divingBunaken,
-      features: t.packageData.largeBoat.features,
-      exclude: t.packageData.largeBoat.exclude,
-      popular: true,
+      features: t.packageData.katamaran.features,
+      exclude: t.packageData.katamaran.exclude,
+      routes: t.packageData.katamaran.routes,
+      popular: false,
     },
     {
       id: 3,
-      name: t.packageData.mediumBoat.name,
-      price: "Rp 190.000",
-      duration: t.packageData.mediumBoat.duration,
-      capacity: t.packageData.mediumBoat.capacity,
+      name: t.packageData.longboat.name,
+      duration: t.packageData.longboat.duration,
+      capacity: t.packageData.longboat.capacity,
       image: sunsetBunaken,
-      features: t.packageData.mediumBoat.features,
-      exclude: t.packageData.mediumBoat.exclude,
+      features: t.packageData.longboat.features,
+      exclude: t.packageData.longboat.exclude,
+      routes: t.packageData.longboat.routes,
+      popular: true,
     },
   ];
 
@@ -95,15 +142,23 @@ const PackagesSection = () => {
     },
   ];
 
-  const handleBookNow = (packageName: string) => {
-    const message = t.packages.whatsapp.package.replace(
-      "{packageName}",
-      packageName
-    );
+  const handleBookNow = (
+    packageName: string,
+    routeName: string,
+    price: string
+  ) => {
+    const message = t.packages.whatsapp.route
+      .replace("{packageName}", packageName)
+      .replace("{routeName}", routeName)
+      .replace("{price}", price);
     window.open(
       `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
       "_blank"
     );
+  };
+
+  const togglePackageDetails = (packageId: number) => {
+    setExpandedPackage(expandedPackage === packageId ? null : packageId);
   };
 
   const handleAddOnInquiry = (addOnName: string) => {
@@ -113,6 +168,19 @@ const PackagesSection = () => {
       "_blank"
     );
   };
+
+  // Sort packages so popular one is always in the center (index 1 for 3 columns)
+  const sortedPackages = [...packages];
+  if (sortedPackages.length === 3) {
+    const popularIndex = sortedPackages.findIndex((pkg) => pkg.popular);
+    if (popularIndex !== -1 && popularIndex !== 1) {
+      // Swap popular package to center position
+      [sortedPackages[popularIndex], sortedPackages[1]] = [
+        sortedPackages[1],
+        sortedPackages[popularIndex],
+      ];
+    }
+  }
 
   return (
     <section id="packages" className="relative py-20 lg:py-28 bg-primary/1">
@@ -135,7 +203,7 @@ const PackagesSection = () => {
 
         {/* Packages Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {packages.map((pkg, index) => (
+          {sortedPackages.map((pkg, index) => (
             <Card
               key={pkg.id}
               className={`group relative overflow-hidden border-border/50 shadow-card hover:shadow-glow transition-all duration-500 ${
@@ -160,17 +228,34 @@ const PackagesSection = () => {
               </div>
 
               <CardHeader className="pb-2">
-                <h3 className="font-display text-2xl font-bold text-card-foreground">
+                <h3 className="font-display text-2xl font-bold text-card-foreground mb-2">
                   {pkg.name}
                 </h3>
-                <div className="flex items-baseline gap-1">
-                  <span className="font-display text-3xl font-bold text-primary">
-                    {pkg.price}
-                  </span>
-                  <span className="text-muted-foreground text-sm">
-                    {t.packages.perPerson}
-                  </span>
-                </div>
+                {(() => {
+                  const minPrice = getMinPrice(pkg.routes);
+                  const maxCapacity = getMaxCapacity(pkg.capacity);
+                  const pricePerPerson =
+                    minPrice > 0 && maxCapacity > 0
+                      ? Math.floor(minPrice / maxCapacity)
+                      : 0;
+
+                  if (pricePerPerson > 0) {
+                    return (
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-sm text-muted-foreground">
+                          {t.packages.startingFrom}
+                        </span>
+                        <span className="font-display text-2xl font-bold text-primary">
+                          Rp {formatPrice(pricePerPerson)}
+                        </span>
+                        <span className="text-muted-foreground text-sm">
+                          {t.packages.perPerson}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </CardHeader>
 
               <CardContent className="space-y-4">
@@ -215,12 +300,60 @@ const PackagesSection = () => {
                   variant={pkg.popular ? "coral" : "default"}
                   size="lg"
                   className="w-full"
-                  onClick={() => handleBookNow(pkg.name)}
+                  onClick={() => togglePackageDetails(pkg.id)}
                 >
-                  <Anchor className="w-4 h-4" />
-                  {t.packages.bookNow}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      expandedPackage === pkg.id ? "rotate-180" : ""
+                    }`}
+                  />
+                  {t.packages.detailPackage}
                 </Button>
               </CardFooter>
+
+              {/* Expanded Details */}
+              {expandedPackage === pkg.id && (
+                <CardContent className="pt-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-300">
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-display text-lg font-semibold text-card-foreground mb-3 flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-primary" />
+                        {t.packages.selectRoute}
+                      </h4>
+                      <div className="space-y-3">
+                        {pkg.routes.map((route, routeIdx) => (
+                          <div
+                            key={routeIdx}
+                            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-primary/50 transition-colors"
+                          >
+                            <div className="flex-1">
+                              <div className="font-body font-medium text-card-foreground mb-1">
+                                {route.name}
+                              </div>
+                              <div className="flex items-baseline gap-1">
+                                <span className="font-display text-xl font-bold text-primary">
+                                  Rp {route.price}
+                                </span>
+                              </div>
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                handleBookNow(pkg.name, route.name, route.price)
+                              }
+                              className="sm:ml-4 w-full sm:w-auto"
+                            >
+                              <Anchor className="w-4 h-4 mr-2" />
+                              {t.packages.bookNow}
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              )}
             </Card>
           ))}
         </div>

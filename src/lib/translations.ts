@@ -54,44 +54,6 @@ export const translations = {
           "Halo! Saya ingin menanyakan tentang add-on {addOnName} untuk paket wisata. Boleh minta info lebih lanjut?",
       },
     },
-    // Packages data
-    packageData: {
-      speed: {
-        name: "Kapal Speed",
-        duration: "Full day",
-        capacity: "1-5 Orang",
-        features: ["Perjalanan Lebih cepat", "Cocok untuk group Kecil"],
-        exclude: ["Makan Siang", "Snorkling Equipment"],
-        routes: [
-          { name: "Bunaken", price: "1.200.000" },
-          { name: "Bunaken - Siladen", price: "-" },
-        ],
-      },
-      katamaran: {
-        name: "Kapal Katamaran",
-        duration: "Full Day",
-        capacity: "10-15 Orang",
-        features: ["Kapal lebih eksklusif", "Kapasitas lebih besar"],
-        exclude: ["Makan Siang", "Snorkling Equipment"],
-        routes: [
-          { name: "Bunaken", price: "1.500.000" },
-          { name: "Bunaken - Siladen", price: "2.000.000" },
-          { name: "Bunaken - Siladen - Nain", price: "2.500.000" },
-        ],
-      },
-      longboat: {
-        name: "Long Boat",
-        duration: "Full Day",
-        capacity: "15-20 Orang",
-        features: ["Kapasitas terbesar", "Nyaman untuk grup besar"],
-        exclude: ["Makan Siang", "Snorkling Equipment"],
-        routes: [
-          { name: "Bunaken", price: "1.500.000" },
-          { name: "Bunaken - Siladen", price: "2.000.000" },
-          { name: "Bunaken - Siladen - Nain", price: "-" },
-        ],
-      },
-    },
     // Add-ons
     addOns: {
       snorkeling: {
@@ -108,9 +70,9 @@ export const translations = {
       badge: "Tentang Kami",
       title: "Pengalaman",
       titleHighlight: "Terpercaya",
-      titleSuffix: "Sejak 2015",
+      titleSuffix: "Sejak 1992",
       description:
-        "Bunaken Boat Charter adalah penyedia layanan sewa kapal terpercaya di Manado. Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke Pulau Bunaken akan menjadi momen yang tak terlupakan.",
+        "Bunaken Boat Charter adalah pioneer penyedia layanan sewa kapal terpercaya di Manado sejak 1992. Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke taman nasional laut bunaken akan menjadi momen yang tak terlupakan.",
       stats: {
         trips: "Trip Sukses",
         customers: "Pelanggan Puas",

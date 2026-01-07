@@ -61,7 +61,17 @@ export const api = {
     });
 
     if (!res.ok) {
-      throw new Error(await res.text());
+      let errorData;
+      try {
+        const errorText = await res.text();
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: "Terjadi kesalahan saat mengubah password" };
+      }
+      const error: any = new Error(errorData.message || "Terjadi kesalahan");
+      error.response = errorData;
+      error.status = res.status;
+      throw error;
     }
     return res.json();
   },
@@ -82,6 +92,38 @@ export const api = {
 
     if (!res.ok) {
       throw new Error(await res.text());
+    }
+    return res.json();
+  },
+
+  uploadFile: async (endpoint: string, file: File) => {
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const headers: HeadersInit = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const res = await fetch(`${BASE_URL}${endpoint}`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+
+    if (!res.ok) {
+      let errorData;
+      try {
+        const errorText = await res.text();
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: "Gagal mengupload gambar" };
+      }
+      const error: any = new Error(errorData.message || "Gagal mengupload gambar");
+      error.response = errorData;
+      error.status = res.status;
+      throw error;
     }
     return res.json();
   },

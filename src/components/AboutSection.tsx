@@ -49,7 +49,7 @@ const AboutSection = () => {
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
                 <div className="font-display text-3xl font-bold text-primary">
-                  500+
+                  1000+
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {t.about.stats.trips}
@@ -57,7 +57,7 @@ const AboutSection = () => {
               </div>
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
                 <div className="font-display text-3xl font-bold text-primary">
-                  2000+
+                  5000+
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {t.about.stats.customers}
@@ -65,7 +65,7 @@ const AboutSection = () => {
               </div>
               <div className="text-center p-4 bg-card rounded-xl shadow-soft">
                 <div className="font-display text-3xl font-bold text-primary">
-                  8+
+                  30+
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {t.about.stats.years}

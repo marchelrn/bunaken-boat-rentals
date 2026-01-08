@@ -10,17 +10,17 @@ import {
   Clock,
   Users,
   Camera,
-  Anchor,
-  Waves,
   CheckCircle2,
-  CircleMinus,
   ChevronDown,
   MapPin,
+  Utensils,
+  Waves,
 } from "lucide-react";
 import divingBunaken from "@/assets/diving-bunaken.jpg";
 import sunsetBunaken from "@/assets/sunset-bunaken.jpg";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePackages } from "@/contexts/PackageContext";
 
 interface Route {
   name: string;
@@ -34,6 +34,7 @@ interface Package {
   capacity: string;
   image: string;
   features: string[];
+  include: string[];
   exclude: string[];
   routes: Route[];
   popular?: boolean;
@@ -87,60 +88,74 @@ const formatPrice = (price: number): string => {
 
 const PackagesSection = () => {
   const { t, language } = useLanguage();
+  const { packages: packagesData } = usePackages();
   const [expandedPackage, setExpandedPackage] = useState<number | null>(null);
 
-  const packages: Package[] = [
-    {
-      id: 1,
-      name: t.packageData.speed.name,
-      duration: t.packageData.speed.duration,
-      capacity: t.packageData.speed.capacity,
-      image: heroBunaken,
-      features: t.packageData.speed.features,
-      exclude: t.packageData.speed.exclude,
-      routes: t.packageData.speed.routes,
-      popular: false,
-    },
-    {
-      id: 2,
-      name: t.packageData.katamaran.name,
-      duration: t.packageData.katamaran.duration,
-      capacity: t.packageData.katamaran.capacity,
-      image: divingBunaken,
-      features: t.packageData.katamaran.features,
-      exclude: t.packageData.katamaran.exclude,
-      routes: t.packageData.katamaran.routes,
-      popular: false,
-    },
-    {
-      id: 3,
-      name: t.packageData.longboat.name,
-      duration: t.packageData.longboat.duration,
-      capacity: t.packageData.longboat.capacity,
-      image: sunsetBunaken,
-      features: t.packageData.longboat.features,
-      exclude: t.packageData.longboat.exclude,
-      routes: t.packageData.longboat.routes,
-      popular: true,
-    },
-  ];
+  // Map package images based on ID (fallback untuk gambar lama)
+  const packageImages: Record<number, string> = {
+    1: heroBunaken,
+    2: divingBunaken,
+    3: sunsetBunaken,
+  };
 
-  const addOns: AddOn[] = [
-    {
-      id: 1,
-      name: t.addOns.snorkeling.name,
-      price: "Rp 150.000",
-      description: t.addOns.snorkeling.description,
-      icon: <Waves className="w-5 h-5" />,
-    },
-    {
-      id: 2,
-      name: t.addOns.lunch.name,
-      price: "Rp 50.000",
-      description: t.addOns.lunch.description,
-      icon: <Camera className="w-5 h-5" />,
-    },
-  ];
+  // Helper function to get image URL
+  const getImageUrl = (pkg: any): string => {
+    // Jika ada image_url dari API, gunakan itu
+    if (pkg.image_url) {
+      // Jika sudah full URL, gunakan langsung
+      if (pkg.image_url.startsWith("http")) {
+        return pkg.image_url;
+      }
+      // Jika relative path, tambahkan base URL
+      return `https://bunakencharter.up.railway.app${pkg.image_url}`;
+    }
+    // Fallback ke gambar statis berdasarkan ID
+    return packageImages[pkg.id] || heroBunaken;
+  };
+
+  // Convert PackageData to Package format with images
+  const packages: Package[] = packagesData
+    .filter((pkg) => pkg && pkg.id) // Filter out invalid packages
+    .map((pkg) => ({
+      id: pkg.id || 0,
+      name: pkg.name || "",
+      duration: pkg.duration || "",
+      capacity: pkg.capacity || "",
+      image: getImageUrl(pkg),
+      features: pkg.features || [],
+      include: pkg.include || [],
+      exclude: pkg.exclude || [],
+      routes: pkg.routes || [],
+      popular: pkg.popular || false,
+    }));
+
+  const { addOns: addOnsData } = usePackages();
+
+  // Map add-ons with icons based on name
+  const getAddOnIcon = (name: string) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes("snorkel") || lowerName.includes("snorkling")) {
+      return <Waves className="w-5 h-5" />;
+    }
+    if (
+      lowerName.includes("makan") ||
+      lowerName.includes("lunch") ||
+      lowerName.includes("makan siang")
+    ) {
+      return <Utensils className="w-5 h-5" />;
+    }
+    return <Waves className="w-5 h-5" />; // Default icon
+  };
+
+  const addOns: AddOn[] = addOnsData
+    .filter((addOn) => addOn && addOn.id) // Filter out invalid add-ons
+    .map((addOn) => ({
+      id: addOn.id || 0,
+      name: addOn.name || "",
+      price: addOn.price || "",
+      description: addOn.description || "",
+      icon: getAddOnIcon(addOn.name || ""),
+    }));
 
   const handleBookNow = (
     packageName: string,
@@ -233,23 +248,15 @@ const PackagesSection = () => {
                 </h3>
                 {(() => {
                   const minPrice = getMinPrice(pkg.routes);
-                  const maxCapacity = getMaxCapacity(pkg.capacity);
-                  const pricePerPerson =
-                    minPrice > 0 && maxCapacity > 0
-                      ? Math.floor(minPrice / maxCapacity)
-                      : 0;
 
-                  if (pricePerPerson > 0) {
+                  if (minPrice > 0) {
                     return (
                       <div className="flex items-baseline gap-1">
                         <span className="text-sm text-muted-foreground">
                           {t.packages.startingFrom}
                         </span>
                         <span className="font-display text-2xl font-bold text-primary">
-                          Rp {formatPrice(pricePerPerson)}
-                        </span>
-                        <span className="text-muted-foreground text-sm">
-                          {t.packages.perPerson}
+                          Rp {formatPrice(minPrice)}
                         </span>
                       </div>
                     );
@@ -283,16 +290,6 @@ const PackagesSection = () => {
                     </li>
                   ))}
                 </ul>
-
-                {/* Excluded Items */}
-                <ul className="space-y-2">
-                  {pkg.exclude.map((excluded, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm">
-                      <CircleMinus className="w-4 h-4 text-not-available flex-shrink-0" />
-                      <span className="text-not-available/90">{excluded}</span>
-                    </li>
-                  ))}
-                </ul>
               </CardContent>
 
               <CardFooter>
@@ -314,7 +311,8 @@ const PackagesSection = () => {
               {/* Expanded Details */}
               {expandedPackage === pkg.id && (
                 <CardContent className="pt-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-300">
-                  <div className="space-y-4">
+                  <div className="space-y-6">
+                    {/* Routes */}
                     <div>
                       <h4 className="font-display text-lg font-semibold text-card-foreground mb-3 flex items-center gap-2">
                         <MapPin className="w-5 h-5 text-primary" />
@@ -328,7 +326,7 @@ const PackagesSection = () => {
                           >
                             <div className="flex-1">
                               <div className="font-body font-medium text-card-foreground mb-1">
-                                {route.name}
+                                {routeIdx + 1}. {route.name}
                               </div>
                               <div className="flex items-baseline gap-1">
                                 <span className="font-display text-xl font-bold text-primary">
@@ -344,13 +342,33 @@ const PackagesSection = () => {
                               }
                               className="sm:ml-4 w-full sm:w-auto"
                             >
-                              <Anchor className="w-4 h-4 mr-2" />
                               {t.packages.bookNow}
                             </Button>
                           </div>
                         ))}
                       </div>
                     </div>
+
+                    {/* Include Section */}
+                    {pkg.include && pkg.include.length > 0 && (
+                      <div>
+                        <h4 className="font-display text-lg font-semibold text-card-foreground mb-3 flex items-center gap-2">
+                          <CheckCircle2 className="w-5 h-5 text-primary" />
+                          Include
+                        </h4>
+                        <ul className="space-y-2">
+                          {pkg.include.map((item, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-center gap-2 text-sm text-card-foreground"
+                            >
+                              <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               )}

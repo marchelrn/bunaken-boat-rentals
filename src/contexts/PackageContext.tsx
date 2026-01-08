@@ -182,12 +182,31 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchAddOns = async () => {
     try {
-      const response = await api.get("/addons");
+      // Fetch add-ons with language parameter for public page
+      const langParam = language === "en" ? "en" : "id";
+      const response = await api.get(`/addons?lang=${langParam}`);
       if (response.data && Array.isArray(response.data)) {
-        const mappedAddOns = response.data.map((addOn: any) => ({
-          ...addOn,
-          id: addOn.ID || addOn.id || 0,
-        }));
+        const mappedAddOns = response.data.map((addOn: any) => {
+          // Use language-specific fields, fallback to legacy fields
+          const name = language === "en" 
+            ? (addOn.name_en || addOn.name_id || addOn.name || "")
+            : (addOn.name_id || addOn.name_en || addOn.name || "");
+          const description = language === "en"
+            ? (addOn.description_en || addOn.description_id || addOn.description || "")
+            : (addOn.description_id || addOn.description_en || addOn.description || "");
+
+          return {
+            ...addOn,
+            id: addOn.ID || addOn.id || 0,
+            name: name,
+            description: description,
+            // Keep all multi-language fields for admin dashboard
+            name_id: addOn.name_id || addOn.name || "",
+            name_en: addOn.name_en || addOn.name || "",
+            description_id: addOn.description_id || addOn.description || "",
+            description_en: addOn.description_en || addOn.description || "",
+          };
+        });
         setAddOns(mappedAddOns);
       } else {
         // Only reset if we got a response but it's not an array
@@ -376,9 +395,20 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
 
   const updateAddOn = async (id: number, data: Partial<AddOnData>) => {
     try {
-      const payload: any = { ...data };
-      delete payload.id;
-      delete payload.ID;
+      // Prepare data with multi-language fields
+      const payload: any = {
+        price: data.price,
+      };
+      
+      // Only send multi-language fields if they are provided
+      if (data.name_id !== undefined) payload.name_id = data.name_id;
+      if (data.name_en !== undefined) payload.name_en = data.name_en;
+      if (data.description_id !== undefined) payload.description_id = data.description_id;
+      if (data.description_en !== undefined) payload.description_en = data.description_en;
+      
+      // Legacy fields for backward compatibility
+      if (data.name !== undefined) payload.name = data.name;
+      if (data.description !== undefined) payload.description = data.description;
 
       await api.put(`/admin/addons/${id}`, payload);
       toast.success("Add-on berhasil diupdate");
@@ -392,7 +422,20 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
 
   const addAddOn = async (data: Omit<AddOnData, "id" | "ID">) => {
     try {
-      await api.post("/admin/addons", data);
+      // Prepare data with multi-language fields
+      const payload: any = {
+        price: data.price,
+        name_id: data.name_id || data.name || "",
+        name_en: data.name_en || data.name || "",
+        description_id: data.description_id || data.description || "",
+        description_en: data.description_en || data.description || "",
+      };
+      
+      // Legacy fields for backward compatibility
+      payload.name = data.name_id || data.name || "";
+      payload.description = data.description_id || data.description || "";
+
+      await api.post("/admin/addons", payload);
       toast.success("Add-on berhasil ditambahkan");
       await fetchAddOns();
     } catch (error) {

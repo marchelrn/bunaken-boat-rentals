@@ -15,12 +15,14 @@ import {
   MapPin,
   Utensils,
   Waves,
+  Info,
 } from "lucide-react";
 import divingBunaken from "@/assets/diving-bunaken.jpg";
 import sunsetBunaken from "@/assets/sunset-bunaken.jpg";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePackages } from "@/contexts/PackageContext";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface Route {
   name: string;
@@ -374,6 +376,32 @@ const PackagesSection = () => {
               )}
             </Card>
           ))}
+        </div>
+
+        {/* Important Notes */}
+        <div className="mb-20 max-w-4xl mx-auto">
+          <Alert className="bg-primary/5 border-primary/20 shadow-sm">
+            <Info className="h-5 w-5 text-primary flex-shrink-0" />
+            <div className="pl-7">
+              <AlertTitle className="text-lg font-semibold mb-4 text-foreground">
+                {t.packages.notes.title}
+              </AlertTitle>
+              <AlertDescription className="space-y-3">
+                <div className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <span className="text-primary font-semibold mt-0.5">•</span>
+                  <span className="leading-relaxed">{t.packages.notes.wnaCharge}</span>
+                </div>
+                <div className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <span className="text-primary font-semibold mt-0.5">•</span>
+                  <span className="leading-relaxed">{t.packages.notes.downPayment}</span>
+                </div>
+                <div className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <span className="text-primary font-semibold mt-0.5">•</span>
+                  <span className="leading-relaxed">{t.packages.notes.cancellation}</span>
+                </div>
+              </AlertDescription>
+            </div>
+          </Alert>
         </div>
 
         {/* Add-ons Section */}

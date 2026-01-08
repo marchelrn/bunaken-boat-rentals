@@ -480,13 +480,30 @@ const AdminDashboard = () => {
 
   // Fungsi untuk menyiapkan form tambah add-on baru
   const handleNewAddOn = () => {
-    setEditingAddOn({ id: 0, name: "", price: "", description: "" });
+    setEditingAddOn({
+      id: 0,
+      name: "",
+      price: "",
+      description: "",
+      name_id: "",
+      name_en: "",
+      description_id: "",
+      description_en: "",
+    });
     setShowAddAddOn(true);
+    setActiveLangTab("id");
   };
 
   // Fungsi untuk masuk ke mode edit add-on yang sudah ada
   const handleEditAddOn = (addOn: AddOnData) => {
-    setEditingAddOn({ ...addOn });
+    setEditingAddOn({
+      ...addOn,
+      name_id: addOn.name_id || addOn.name || "",
+      name_en: addOn.name_en || addOn.name || "",
+      description_id: addOn.description_id || addOn.description || "",
+      description_en: addOn.description_en || addOn.description || "",
+    });
+    setActiveLangTab("id");
   };
 
   // Fungsi untuk membatalkan pengeditan add-on
@@ -499,17 +516,32 @@ const AdminDashboard = () => {
   const handleSaveAddOn = async () => {
     if (editingAddOn) {
       try {
+        // Prepare add-on data with multi-language fields
+        const addOnData: Partial<AddOnData> = {
+          price: editingAddOn.price,
+          name_id: editingAddOn.name_id || editingAddOn.name || "",
+          name_en: editingAddOn.name_en || editingAddOn.name || "",
+          description_id:
+            editingAddOn.description_id || editingAddOn.description || "",
+          description_en:
+            editingAddOn.description_en || editingAddOn.description || "",
+          // Set legacy fields from multi-language fields
+          name: editingAddOn.name_id || editingAddOn.name || "",
+          description:
+            editingAddOn.description_id || editingAddOn.description || "",
+        };
+
         if (!editingAddOn.id && !editingAddOn.ID) {
           // New add-on
-          const { id, ID, ...addOnData } = editingAddOn;
-          await addAddOn(addOnData);
+          const { id, ID, ...newAddOnData } = addOnData;
+          await addAddOn(newAddOnData as Omit<AddOnData, "id" | "ID">);
           setEditingAddOn(null);
           setShowAddAddOn(false);
           // Toast notification sudah dikirim dari PackageContext
         } else {
           // Update existing add-on
           const addOnId = editingAddOn.id || editingAddOn.ID || 0;
-          await updateAddOn(addOnId, editingAddOn);
+          await updateAddOn(addOnId, addOnData);
           setEditingAddOn(null);
           // Toast notification sudah dikirim dari PackageContext
         }
@@ -2230,46 +2262,121 @@ const AdminDashboard = () => {
                     <CardTitle>Tambah Add-On Baru</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label>Nama Add-On</Label>
-                        <Input
-                          value={editingAddOn?.name || ""}
-                          onChange={(e) =>
-                            setEditingAddOn({
-                              ...editingAddOn!,
-                              name: e.target.value,
-                            })
-                          }
-                          placeholder="Contoh: Snorkling Equipment"
-                        />
+                    <div className="space-y-6">
+                      {/* Language Tabs */}
+                      <Tabs
+                        value={activeLangTab}
+                        onValueChange={(v) =>
+                          setActiveLangTab(v as "id" | "en")
+                        }
+                      >
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="id">
+                            <Languages className="w-4 h-4 mr-2" />
+                            Bahasa Indonesia
+                          </TabsTrigger>
+                          <TabsTrigger value="en">
+                            <Languages className="w-4 h-4 mr-2" />
+                            English
+                          </TabsTrigger>
+                        </TabsList>
+
+                        {/* Bahasa Indonesia Tab */}
+                        <TabsContent value="id" className="space-y-4 mt-4">
+                          <div className="space-y-2">
+                            <Label>Nama Add-On (ID)</Label>
+                            <Input
+                              value={
+                                editingAddOn?.name_id ||
+                                editingAddOn?.name ||
+                                ""
+                              }
+                              onChange={(e) =>
+                                setEditingAddOn({
+                                  ...editingAddOn!,
+                                  name_id: e.target.value,
+                                  name: e.target.value, // Also update legacy field
+                                })
+                              }
+                              placeholder="Contoh: Snorkeling Equipment"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Deskripsi (ID)</Label>
+                            <Input
+                              value={
+                                editingAddOn?.description_id ||
+                                editingAddOn?.description ||
+                                ""
+                              }
+                              onChange={(e) =>
+                                setEditingAddOn({
+                                  ...editingAddOn!,
+                                  description_id: e.target.value,
+                                  description: e.target.value, // Also update legacy field
+                                })
+                              }
+                              placeholder="Contoh: Set Snorkeling Equipment (Fins & Mask)"
+                            />
+                          </div>
+                        </TabsContent>
+
+                        {/* English Tab */}
+                        <TabsContent value="en" className="space-y-4 mt-4">
+                          <div className="space-y-2">
+                            <Label>Add-On Name (EN)</Label>
+                            <Input
+                              value={
+                                editingAddOn?.name_en ||
+                                editingAddOn?.name ||
+                                ""
+                              }
+                              onChange={(e) =>
+                                setEditingAddOn({
+                                  ...editingAddOn!,
+                                  name_en: e.target.value,
+                                })
+                              }
+                              placeholder="Example: Snorkeling Equipment"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Description (EN)</Label>
+                            <Input
+                              value={
+                                editingAddOn?.description_en ||
+                                editingAddOn?.description ||
+                                ""
+                              }
+                              onChange={(e) =>
+                                setEditingAddOn({
+                                  ...editingAddOn!,
+                                  description_en: e.target.value,
+                                })
+                              }
+                              placeholder="Example: Snorkeling Equipment Set (Fins & Mask)"
+                            />
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+
+                      {/* Common Fields (not language-specific) */}
+                      <div className="pt-4 border-t">
+                        <div className="space-y-2">
+                          <Label>Harga</Label>
+                          <Input
+                            value={editingAddOn?.price || ""}
+                            onChange={(e) =>
+                              setEditingAddOn({
+                                ...editingAddOn!,
+                                price: e.target.value,
+                              })
+                            }
+                            placeholder="Contoh: Rp 150.000"
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label>Harga</Label>
-                        <Input
-                          value={editingAddOn?.price || ""}
-                          onChange={(e) =>
-                            setEditingAddOn({
-                              ...editingAddOn!,
-                              price: e.target.value,
-                            })
-                          }
-                          placeholder="Contoh: Rp 150.000"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Deskripsi</Label>
-                        <Input
-                          value={editingAddOn?.description || ""}
-                          onChange={(e) =>
-                            setEditingAddOn({
-                              ...editingAddOn!,
-                              description: e.target.value,
-                            })
-                          }
-                          placeholder="Contoh: Set Snorkling Equipment (Fins & Mask)"
-                        />
-                      </div>
+
                       <div className="flex gap-2">
                         <Button onClick={handleSaveAddOn}>
                           <Save className="w-4 h-4 mr-2" />
@@ -2366,46 +2473,127 @@ const AdminDashboard = () => {
                           <CardTitle>Edit Add-On</CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <Label>Nama Add-On</Label>
-                              <Input
-                                value={editingAddOn?.name || ""}
-                                onChange={(e) =>
-                                  setEditingAddOn({
-                                    ...editingAddOn!,
-                                    name: e.target.value,
-                                  })
-                                }
-                                placeholder="Contoh: Snorkling Equipment"
-                              />
+                          <div className="space-y-6">
+                            {/* Language Tabs */}
+                            <Tabs
+                              value={activeLangTab}
+                              onValueChange={(v) =>
+                                setActiveLangTab(v as "id" | "en")
+                              }
+                            >
+                              <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="id">
+                                  <Languages className="w-4 h-4 mr-2" />
+                                  Bahasa Indonesia
+                                </TabsTrigger>
+                                <TabsTrigger value="en">
+                                  <Languages className="w-4 h-4 mr-2" />
+                                  English
+                                </TabsTrigger>
+                              </TabsList>
+
+                              {/* Bahasa Indonesia Tab */}
+                              <TabsContent
+                                value="id"
+                                className="space-y-4 mt-4"
+                              >
+                                <div className="space-y-2">
+                                  <Label>Nama Add-On (ID)</Label>
+                                  <Input
+                                    value={
+                                      editingAddOn?.name_id ||
+                                      editingAddOn?.name ||
+                                      ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingAddOn({
+                                        ...editingAddOn!,
+                                        name_id: e.target.value,
+                                        name: e.target.value, // Also update legacy field
+                                      })
+                                    }
+                                    placeholder="Contoh: Snorkeling Equipment"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Deskripsi (ID)</Label>
+                                  <Input
+                                    value={
+                                      editingAddOn?.description_id ||
+                                      editingAddOn?.description ||
+                                      ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingAddOn({
+                                        ...editingAddOn!,
+                                        description_id: e.target.value,
+                                        description: e.target.value, // Also update legacy field
+                                      })
+                                    }
+                                    placeholder="Contoh: Set Snorkeling Equipment (Fins & Mask)"
+                                  />
+                                </div>
+                              </TabsContent>
+
+                              {/* English Tab */}
+                              <TabsContent
+                                value="en"
+                                className="space-y-4 mt-4"
+                              >
+                                <div className="space-y-2">
+                                  <Label>Add-On Name (EN)</Label>
+                                  <Input
+                                    value={
+                                      editingAddOn?.name_en ||
+                                      editingAddOn?.name ||
+                                      ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingAddOn({
+                                        ...editingAddOn!,
+                                        name_en: e.target.value,
+                                      })
+                                    }
+                                    placeholder="Example: Snorkeling Equipment"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Description (EN)</Label>
+                                  <Input
+                                    value={
+                                      editingAddOn?.description_en ||
+                                      editingAddOn?.description ||
+                                      ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingAddOn({
+                                        ...editingAddOn!,
+                                        description_en: e.target.value,
+                                      })
+                                    }
+                                    placeholder="Example: Snorkeling Equipment Set (Fins & Mask)"
+                                  />
+                                </div>
+                              </TabsContent>
+                            </Tabs>
+
+                            {/* Common Fields (not language-specific) */}
+                            <div className="pt-4 border-t">
+                              <div className="space-y-2">
+                                <Label>Harga</Label>
+                                <Input
+                                  value={editingAddOn?.price || ""}
+                                  onChange={(e) =>
+                                    setEditingAddOn({
+                                      ...editingAddOn!,
+                                      price: e.target.value,
+                                    })
+                                  }
+                                  placeholder="Contoh: Rp 150.000"
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label>Harga</Label>
-                              <Input
-                                value={editingAddOn?.price || ""}
-                                onChange={(e) =>
-                                  setEditingAddOn({
-                                    ...editingAddOn!,
-                                    price: e.target.value,
-                                  })
-                                }
-                                placeholder="Contoh: Rp 150.000"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Deskripsi</Label>
-                              <Input
-                                value={editingAddOn?.description || ""}
-                                onChange={(e) =>
-                                  setEditingAddOn({
-                                    ...editingAddOn!,
-                                    description: e.target.value,
-                                  })
-                                }
-                                placeholder="Contoh: Set Snorkling Equipment (Fins & Mask)"
-                              />
-                            </div>
+
                             <div className="flex gap-2">
                               <Button onClick={handleSaveAddOn}>
                                 <Save className="w-4 h-4 mr-2" />

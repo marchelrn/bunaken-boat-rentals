@@ -53,12 +53,19 @@ export const translations = {
         addOn:
           "Halo! Saya ingin menanyakan tentang add-on {addOnName} untuk paket wisata. Boleh minta info lebih lanjut?",
       },
+      notes: {
+        title: "Catatan Penting",
+        wnaCharge: "Tambahan charge WNA: Rp 150.000",
+        downPayment: "DP 40% minimal H-1",
+        cancellation:
+          "Jika cuaca buruk, Trip dapat dibatalkan dan DP dikembalikan ",
+      },
     },
     // Add-ons
     addOns: {
       snorkeling: {
-        name: "Snorkling Equipment",
-        description: "Set Snorkling Equipment (Fins & Mask)",
+        name: "Snorkeling Equipment",
+        description: "Set Snorkeling Equipment (Fins & Mask)",
       },
       lunch: {
         name: "Makan Siang",
@@ -72,7 +79,7 @@ export const translations = {
       titleHighlight: "Terpercaya",
       titleSuffix: "Sejak 1992",
       description:
-        "Bunaken Boat Charter adalah pioneer penyedia layanan sewa kapal terpercaya di Manado sejak 1992. Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke taman nasional laut bunaken akan menjadi momen yang tak terlupakan.",
+        "Bunaken Boat Charter adalah pioneer penyedia layanan sewa kapal terpercaya di Manado sejak 1992. Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke Taman Nasional Laut Bunaken akan menjadi momen yang tak terlupakan.",
       stats: {
         trips: "Trip Sukses",
         customers: "Pelanggan Puas",
@@ -87,7 +94,7 @@ export const translations = {
         experience: {
           title: "Berpengalaman",
           description:
-            "Lebih dari 8 tahun melayani wisatawan lokal dan mancanegara ke Bunaken.",
+            "Lebih dari 30 tahun melayani wisatawan lokal dan mancanegara ke Bunaken.",
         },
         service: {
           title: "Pelayanan Terbaik",
@@ -180,6 +187,13 @@ export const translations = {
         addOn:
           "Hello! I would like to inquire about the {addOnName} add-on for the tour package. Can I get more information?",
       },
+      notes: {
+        title: "Important Notes",
+        wnaCharge: "Additional charge for foreign nationals: Rp 150,000",
+        downPayment: "40% down payment minimum H-1 (one day before)",
+        cancellation:
+          "If weather is bad, Trip can be cancelled and down payment refunded",
+      },
     },
     // Packages data
     packageData: {
@@ -235,9 +249,9 @@ export const translations = {
       badge: "About Us",
       title: "Trusted",
       titleHighlight: "Experience",
-      titleSuffix: "Since 2015",
+      titleSuffix: "Since 1992",
       description:
-        "Bunaken Boat Charter is a trusted boat rental service provider in Manado. We are committed to providing the best marine tourism experience at affordable prices. With a well-maintained fleet and experienced crew, your journey to Bunaken Island will be an unforgettable moment.",
+        "Bunaken Boat Charter is a pioneer trusted boat rental service provider in Manado since 1992. We are committed to providing the best marine tourism experience at affordable prices. With a well-maintained fleet and experienced crew, your journey to Bunaken National Marine Park will be an unforgettable moment.",
       stats: {
         trips: "Successful Trips",
         customers: "Satisfied Customers",
@@ -252,7 +266,7 @@ export const translations = {
         experience: {
           title: "Experienced",
           description:
-            "More than 8 years serving local and international tourists to Bunaken.",
+            "More than 30 years serving local and international tourists to Bunaken.",
         },
         service: {
           title: "Best Service",

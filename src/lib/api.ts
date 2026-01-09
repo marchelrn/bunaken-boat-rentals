@@ -1,4 +1,38 @@
-﻿const BASE_URL = "https://bunakencharter.up.railway.app/api";
+﻿// const getApiUrl = () => {
+//   if (typeof window !== "undefined") {
+//     return (
+//       import.meta.env.VITE_API_URL ||
+//       import.meta.env.VITE_API_BASE_URL ||
+//       "http://localhost:8000/api"
+//     );
+//   }
+//   return "http://localhost:8000/api";
+// };
+
+const getApiUrlHosting = () => {
+  if (typeof window !== "undefined") {
+    return (
+      import.meta.env.VITE_API_URL ||
+      import.meta.env.VITE_API_BASE_URL ||
+      "https://bunaken-boat-rentals-backend-marchelrn8958-f4wxw52b.leapcell.dev/api"
+    );
+  }
+  return "https://bunaken-boat-rentals-backend-marchelrn8958-f4wxw52b.leapcell.dev/api";
+};
+
+// export const API_URL = getApiUrl();
+export const API_URL = getApiUrlHosting();
+
+export const getImageBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    const apiUrl =
+      import.meta.env.VITE_API_URL ||
+      import.meta.env.VITE_API_BASE_URL ||
+      "https://bunakencharter.up.railway.app/api";
+    return apiUrl.replace("/api", "");
+  }
+  return "https://bunakencharter.up.railway.app/api";
+};
 
 export const api = {
   get: async (endpoint: string) => {
@@ -10,7 +44,7 @@ export const api = {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}${endpoint}`, {
       headers,
     });
 
@@ -33,13 +67,17 @@ export const api = {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}${endpoint}`, {
       method: "POST",
       headers,
       body: JSON.stringify(body),
     });
 
     if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      }
       throw new Error(await res.text());
     }
     return res.json();
@@ -54,13 +92,17 @@ export const api = {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}${endpoint}`, {
       method: "PUT",
       headers,
       body: JSON.stringify(body),
     });
 
     if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      }
       let errorData;
       try {
         const errorText = await res.text();
@@ -85,12 +127,16 @@ export const api = {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}${endpoint}`, {
       method: "DELETE",
       headers,
     });
 
     if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      }
       throw new Error(await res.text());
     }
     return res.json();
@@ -106,13 +152,17 @@ export const api = {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}${endpoint}`, {
       method: "POST",
       headers,
       body: formData,
     });
 
     if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/admin/login";
+      }
       let errorData;
       try {
         const errorText = await res.text();
@@ -120,7 +170,9 @@ export const api = {
       } catch {
         errorData = { message: "Gagal mengupload gambar" };
       }
-      const error: any = new Error(errorData.message || "Gagal mengupload gambar");
+      const error: any = new Error(
+        errorData.message || "Gagal mengupload gambar"
+      );
       error.response = errorData;
       error.status = res.status;
       throw error;

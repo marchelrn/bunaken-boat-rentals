@@ -287,13 +287,13 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
       // Common fields
       if (data.capacity !== undefined) payload.capacity = data.capacity;
       if (data.duration !== undefined) payload.duration = data.duration;
-      // Always include image_url if it exists and is not empty
-      // Backend will preserve existing image_url if not provided or if empty string
-      // Only send image_url if it has a value to prevent accidentally clearing it
-      if (data.image_url !== undefined && data.image_url !== "") {
-        payload.image_url = data.image_url;
+      // CRITICAL: Always include image_url if it exists (even if empty string)
+      // Backend will preserve existing image_url if empty string is sent
+      // This ensures image_url is never lost during updates
+      if (data.image_url !== undefined) {
+        payload.image_url = data.image_url || ""; // Always send, even if empty
       }
-      // If image_url is undefined or empty, don't include it in payload
+      // If image_url is undefined, don't include it in payload
       // Backend will preserve the existing value
 
       await api.put(`/admin/packages/${id}`, payload);

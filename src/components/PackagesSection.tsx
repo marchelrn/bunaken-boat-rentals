@@ -22,6 +22,7 @@ import sunsetBunaken from "@/assets/sunset-bunaken.jpg";
 import heroBunaken from "@/assets/hero-bunaken.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePackages } from "@/contexts/PackageContext";
+import { getImageBaseUrl } from "@/lib/api";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface Route {
@@ -103,13 +104,16 @@ const PackagesSection = () => {
   // Helper function to get image URL
   const getImageUrl = (pkg: any): string => {
     // Jika ada image_url dari API, gunakan itu
-    if (pkg.image_url) {
+    if (pkg.image_url && pkg.image_url.trim() !== "") {
       // Jika sudah full URL, gunakan langsung
       if (pkg.image_url.startsWith("http")) {
         return pkg.image_url;
       }
-      // Jika relative path, tambahkan base URL
-      return `https://bunakencharter.up.railway.app${pkg.image_url}`;
+      // Jika relative path, tambahkan base URL dari config
+      const baseUrl = getImageBaseUrl();
+      // Ensure pkg.image_url starts with / for proper URL construction
+      const imagePath = pkg.image_url.startsWith("/") ? pkg.image_url : `/${pkg.image_url}`;
+      return `${baseUrl}${imagePath}`;
     }
     // Fallback ke gambar statis berdasarkan ID
     return packageImages[pkg.id] || heroBunaken;

@@ -2,9 +2,10 @@
   createContext,
   useContext,
   useState,
+  useEffect,
   ReactNode,
 } from "react";
-import { api } from "@/lib/api";
+import { api, API_URL } from "@/lib/api";
 
 interface AdminContextType {
   isAuthenticated: boolean;
@@ -17,8 +18,54 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    // Check if token exists in localStorage for initial state
+    // Don't validate yet, just check existence
     return !!localStorage.getItem("token");
   });
+
+  // Validate token on mount (in background, no loading UI)
+  useEffect(() => {
+    const validateToken = async () => {
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        setIsAuthenticated(false);
+        return;
+      }
+
+      // Try to validate token by making a test request to a protected endpoint
+      // This runs in background without blocking UI
+      try {
+        // Test token by trying to access admin endpoint which requires auth
+        const testResponse = await fetch(`${API_URL}/admin/packages`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (testResponse.status === 401 || testResponse.status === 403) {
+          // Token is invalid or expired, clear it
+          localStorage.removeItem("token");
+          sessionStorage.removeItem("admin_authenticated");
+          setIsAuthenticated(false);
+        } else {
+          // Token seems valid (even if endpoint returns error, 401/403 is what matters)
+          setIsAuthenticated(true);
+          sessionStorage.setItem("admin_authenticated", "true");
+        }
+      } catch (error) {
+        // Network error - don't clear token, might be temporary
+        // Just set authenticated to false for now
+        console.error("Token validation error:", error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    // Run validation in background without blocking
+    validateToken();
+  }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
@@ -26,6 +73,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         // Response format from Go: { data: { token: "..." }, message: "..." }
         if (response.data && response.data.token) {
             localStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("admin_authenticated", "true");
             setIsAuthenticated(true);
             return true;
         }
@@ -39,6 +87,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("token");
+    sessionStorage.removeItem("admin_authenticated");
   };
 
   const changePassword = async (oldPassword: string, newPassword: string): Promise<{ success: boolean; message?: string }> => {

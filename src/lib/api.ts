@@ -14,10 +14,10 @@ const getApiUrlHosting = () => {
     return (
       import.meta.env.VITE_API_URL ||
       import.meta.env.VITE_API_BASE_URL ||
-      "https://bunaken-boat-rentals-backend-marchelrn8958-f4wxw52b.leapcell.dev/api"
+      "https://sandybrown-kangaroo-261517.hostingersite.com/api"
     );
   }
-  return "https://bunaken-boat-rentals-backend-marchelrn8958-f4wxw52b.leapcell.dev/api";
+  return "https://sandybrown-kangaroo-261517.hostingersite.com/api";
 };
 
 // export const API_URL = getApiUrl();
@@ -28,10 +28,10 @@ export const getImageBaseUrl = () => {
     const apiUrl =
       import.meta.env.VITE_API_URL ||
       import.meta.env.VITE_API_BASE_URL ||
-      "https://bunakencharter.up.railway.app/api";
+      "https://sandybrown-kangaroo-261517.hostingersite.com/api";
     return apiUrl.replace("/api", "");
   }
-  return "https://bunakencharter.up.railway.app/api";
+  return "https://sandybrown-kangaroo-261517.hostingersite.com";
 };
 
 export const api = {

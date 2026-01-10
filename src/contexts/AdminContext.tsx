@@ -55,10 +55,9 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
           setIsAuthenticated(true);
           sessionStorage.setItem("admin_authenticated", "true");
         }
-      } catch (error) {
+      } catch {
         // Network error - don't clear token, might be temporary
         // Just set authenticated to false for now
-        console.error("Token validation error:", error);
         setIsAuthenticated(false);
       }
     };
@@ -78,8 +77,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
             return true;
         }
         return false;
-    } catch (error) {
-        console.error("Login failed:", error);
+    } catch {
         return false;
     }
   };
@@ -102,7 +100,6 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       }
       return { success: true };
     } catch (error: any) {
-      console.error("Change password failed:", error);
       // Extract error message from response
       let errorMessage = "Gagal mengubah password";
       

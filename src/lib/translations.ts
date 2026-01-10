@@ -79,7 +79,7 @@ export const translations = {
       titleHighlight: "Terpercaya",
       titleSuffix: "Sejak 1992",
       description:
-        "Bunaken Boat Charter adalah pioneer penyedia layanan sewa kapal terpercaya di Manado sejak 1992. Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke Taman Nasional Laut Bunaken akan menjadi momen yang tak terlupakan.",
+        "Bunaken Boat Charter Terang Mulia adalah pioneer penyedia layanan sewa kapal terpercaya di Manado sejak 1992. Kami berkomitmen memberikan pengalaman wisata bahari terbaik dengan harga yang terjangkau. Dengan armada kapal yang terawat dan kru yang berpengalaman, perjalanan Anda ke Taman Nasional Laut Bunaken akan menjadi momen yang tak terlupakan.",
       stats: {
         trips: "Trip Sukses",
         customers: "Pelanggan Puas",
@@ -89,12 +89,12 @@ export const translations = {
         safety: {
           title: "Keamanan Terjamin",
           description:
-            "Kapal dilengkapi alat keselamatan standar internasional dan awak kapal berpengalaman.",
+            "Kapal dilengkapi alat keselamatan standar nasional dan awak kapal berpengalaman.",
         },
         experience: {
           title: "Berpengalaman",
           description:
-            "Lebih dari 30 tahun melayani wisatawan lokal dan mancanegara ke Bunaken.",
+            "Lebih dari 30 tahun melayani wisatawan lokal dan mancanegara ke taman laut nasional Bunaken.",
         },
         service: {
           title: "Pelayanan Terbaik",
@@ -251,7 +251,7 @@ export const translations = {
       titleHighlight: "Experience",
       titleSuffix: "Since 1992",
       description:
-        "Bunaken Boat Charter is a pioneer trusted boat rental service provider in Manado since 1992. We are committed to providing the best marine tourism experience at affordable prices. With a well-maintained fleet and experienced crew, your journey to Bunaken National Marine Park will be an unforgettable moment.",
+        "Bunaken Boat Charter Terang Mulia is a pioneer trusted boat rental service provider in Manado since 1992. We are committed to providing the best marine tourism experience at affordable prices. With a well-maintained fleet and experienced crew, your journey to Bunaken National Marine Park will be an unforgettable moment.",
       stats: {
         trips: "Successful Trips",
         customers: "Satisfied Customers",
@@ -266,7 +266,7 @@ export const translations = {
         experience: {
           title: "Experienced",
           description:
-            "More than 30 years serving local and international tourists to Bunaken.",
+            "More than 30 years serving local and international tourists to Bunaken National Marine Park.",
         },
         service: {
           title: "Best Service",

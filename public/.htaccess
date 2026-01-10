@@ -1,0 +1,43 @@
+# Apache configuration for Hostinger - Fix JavaScript MIME type
+
+# STEP 1: Set MIME types FIRST (before anything else)
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType application/javascript .mjs
+  AddType text/css .css
+</IfModule>
+
+# STEP 2: Force MIME type for JavaScript files
+<FilesMatch "\.js$">
+  ForceType application/javascript
+</FilesMatch>
+
+<FilesMatch "\.mjs$">
+  ForceType application/javascript
+</FilesMatch>
+
+# STEP 3: Rewrite rules - check file existence FIRST
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # CRITICAL: If file exists, serve it directly (no rewrite)
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+  
+  # If directory exists, serve it directly
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  
+  # Only rewrite non-existent paths to index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# STEP 4: Headers (optional, for extra safety)
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|mjs)$">
+    Header set Content-Type "application/javascript; charset=utf-8"
+  </FilesMatch>
+</IfModule>

@@ -36,7 +36,8 @@ import {
   Languages,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { api, getImageBaseUrl } from "@/lib/api";
+import { getImageBaseUrl } from "@/lib/api";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   AlertDialog,
@@ -398,29 +399,24 @@ const AdminDashboard = () => {
 
     setUploadingImage(true);
     try {
-      const response = await api.uploadFile(
-        "/admin/packages/upload-image",
-        file
-      );
-      if (response.data && response.data.image_url) {
-        const imageUrl = response.data.image_url;
-        if (editingPackage) {
-          setEditingPackage({
-            ...editingPackage,
-            image_url: imageUrl,
-          });
-        }
-        toast({
-          title: "Berhasil",
-          description: "Gambar berhasil diupload",
+      // Upload to Cloudinary
+      const response = await uploadToCloudinary(file, "bunaken-packages");
+      const imageUrl = response.secure_url;
+      
+      if (editingPackage) {
+        setEditingPackage({
+          ...editingPackage,
+          image_url: imageUrl,
         });
       }
+      toast({
+        title: "Berhasil",
+        description: "Gambar berhasil diupload ke Cloudinary",
+      });
     } catch (error: any) {
-      console.error("Upload error:", error);
       toast({
         title: "Error",
-        description:
-          error.response?.message || error.message || "Gagal mengupload gambar",
+        description: error.message || "Gagal mengupload gambar",
         variant: "destructive",
       });
       setImagePreview(null);

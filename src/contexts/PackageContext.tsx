@@ -167,16 +167,10 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
           };
         });
         setPackages(mappedPackages);
-      } else {
-        // Only reset if we got a response but it's not an array
-        // This means the API returned something unexpected
-        console.warn("Packages response is not an array:", response.data);
-        // Don't reset to empty array - keep existing data
       }
-    } catch (error) {
-      console.error("Failed to fetch packages", error);
+      // Keep existing data if response is not an array
+    } catch {
       // Keep existing packages on error to prevent flickering
-      // Don't reset to empty array on error
     }
   };
 
@@ -208,23 +202,17 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
           };
         });
         setAddOns(mappedAddOns);
-      } else {
-        // Only reset if we got a response but it's not an array
-        // This means the API returned something unexpected
-        console.warn("Add-ons response is not an array:", response.data);
-        // Don't reset to empty array - keep existing data
       }
-    } catch (error) {
-      console.error("Failed to fetch add-ons", error);
+      // Keep existing data if response is not an array
+    } catch {
       // Keep existing add-ons on error to prevent flickering
-      // Don't reset to empty array on error
     }
   };
 
   useEffect(() => {
     // Fetch both in parallel to avoid race conditions
-    Promise.all([fetchPackages(), fetchAddOns()]).catch((error) => {
-      console.error("Error fetching data:", error);
+    Promise.all([fetchPackages(), fetchAddOns()]).catch(() => {
+      // Silent error handling - errors already handled in individual fetches
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]); // Refetch when language changes
@@ -300,7 +288,6 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Paket berhasil diupdate");
       await fetchPackages();
     } catch (error) {
-      console.error("Update failed", error);
       toast.error("Gagal update paket");
       throw error;
     }
@@ -375,7 +362,6 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Paket berhasil ditambahkan");
       await fetchPackages();
     } catch (error) {
-      console.error("Add package failed", error);
       toast.error("Gagal menambahkan paket");
       throw error;
     }
@@ -387,7 +373,6 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Paket berhasil dihapus");
       await fetchPackages();
     } catch (error) {
-      console.error("Delete package failed", error);
       toast.error("Gagal menghapus paket");
       throw error;
     }
@@ -414,7 +399,6 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Add-on berhasil diupdate");
       await fetchAddOns();
     } catch (error) {
-      console.error("Update add-on failed", error);
       toast.error("Gagal update add-on");
       throw error;
     }
@@ -439,7 +423,6 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Add-on berhasil ditambahkan");
       await fetchAddOns();
     } catch (error) {
-      console.error("Add add-on failed", error);
       toast.error("Gagal menambahkan add-on");
       throw error;
     }
@@ -451,7 +434,6 @@ export const PackageProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Add-on berhasil dihapus");
       await fetchAddOns();
     } catch (error) {
-      console.error("Delete add-on failed", error);
       toast.error("Gagal menghapus add-on");
       throw error;
     }
